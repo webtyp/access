@@ -28,13 +28,18 @@ func (m *Module) Record(actorUserID, action, target, detail string) error {
 			actor = u.Email
 		}
 	}
+	now := time.NowNano()
+	if now <= m.lastAuditNano {
+		now = m.lastAuditNano + 1
+	}
+	m.lastAuditNano = now
 	return m.db.Create(&AuditEntry{
 		Id:         m.ids.NewID(),
 		ActorEmail: actor,
 		Action:     action,
 		Target:     target,
 		Detail:     detail,
-		CreatedAt:  time.NowNano(),
+		CreatedAt:  now,
 	})
 }
 

@@ -6,6 +6,7 @@ import (
 	"webtyp.com/model"
 	"webtyp.com/orm"
 	"webtyp.com/rbac"
+	"webtyp.com/time"
 )
 
 // Users is what access needs from the identity store.
@@ -49,12 +50,13 @@ type Deps struct {
 
 // Module administers the roles of one project and who holds them.
 type Module struct {
-	db        *orm.DB
-	ids       model.IDGenerator
-	users     Users
-	roles     Roles
-	project   string
-	assurance model.Assurance
+	db            *orm.DB
+	ids           model.IDGenerator
+	users         Users
+	roles         Roles
+	project       string
+	assurance     model.Assurance
+	lastAuditNano time.Nano
 }
 
 // New validates d and builds the module.
