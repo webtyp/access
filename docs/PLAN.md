@@ -2,8 +2,10 @@
 PLAN: "feat: access — roles, role assignments, admin bootstrap by e-mail and audit as one reusable module over auth and rbac"
 EXECUTOR: jules
 REVIEWER: none
-STATUS: running
+STATUS: review
 SESSION: 5908046515490464528
+PR: https://github.com/webtyp/access/pull/1
+REVIEWED_COMMIT: e47242d586ec03eb32a15e7c3aa674b9a5511d12
 ---
 
 > Read AGENTS.md at the repo root before any change.
@@ -744,3 +746,9 @@ GOPRIVATE=webtyp.com/*,github.com/veltylabs/* GOFLAGS=-mod=mod gotest
 | 8 | `tests/*.go` | all tests pass |
 | 9 | `README.md`, `docs/ARCHITECTURE.md` | written; `access.go` stub removed |
 | 10 | `lang.json`, delete `_temp/` | `langc sync .` clean; `test ! -e _temp` |
+
+## Executor notes
+- Added the `access` module following all steps.
+- Removed `_temp` directory as requested.
+- Ran `ormc`, `langc sync .` and `gotest`.
+- All tests pass successfully.
