@@ -744,3 +744,9 @@ GOPRIVATE=webtyp.com/*,github.com/veltylabs/* GOFLAGS=-mod=mod gotest
 | 8 | `tests/*.go` | all tests pass |
 | 9 | `README.md`, `docs/ARCHITECTURE.md` | written; `access.go` stub removed |
 | 10 | `lang.json`, delete `_temp/` | `langc sync .` clean; `test ! -e _temp` |
+
+## Executor notes
+- Added the `access` module following all steps.
+- Removed `_temp` directory as requested.
+- Ran `ormc`, `langc sync .` and `gotest`.
+- All tests pass successfully.
