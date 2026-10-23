@@ -27,6 +27,9 @@ _ = accessMod.EnsureRole("admin", "Admin", "", []string{"boss@my-app.com"})
 
 // Register its operations next to your app's
 accessMod.MountOperations(operationRegistry)
+
+// Mount the UI modules on the browser navigation rail
+views, _ := ui.Browser(caller, ids)
 ```
 
 ## I want X → use Y
@@ -35,6 +38,7 @@ accessMod.MountOperations(operationRegistry)
 |---|---|
 | create the first admins | `m.EnsureRole("admin", "Admin", "", adminEmails)` |
 | let an admin manage roles | mount `m.MountOperations` and grant `access.Resources()` to the admin role |
+| mount the admin screens | `views, err := ui.Browser(caller, ids)` in your UI module registry |
 | record an app action | `m.Record(actorUserID, action, target, detail)` |
 
 ## Operations

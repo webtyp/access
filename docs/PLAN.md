@@ -3,8 +3,10 @@ PLAN: "feat: access UI — roles, role assignments and audit screens with crudvi
 TAG: v0.0.3
 EXECUTOR: jules
 REVIEWER: none
-STATUS: running
+STATUS: review
 SESSION: 13203505619078721704
+PR: https://github.com/webtyp/access/pull/2
+REVIEWED_COMMIT: 254ddd38b9bddf8c821e492ad1014cf37f03c2bb
 ---
 
 > Read AGENTS.md at the repo root before any change.
