@@ -3,6 +3,8 @@ PLAN: "feat: access UI — roles, role assignments and audit screens with crudvi
 TAG: v0.0.3
 EXECUTOR: jules
 REVIEWER: none
+STATUS: running
+SESSION: 13203505619078721704
 ---
 
 > Read AGENTS.md at the repo root before any change.
