@@ -2,6 +2,8 @@
 PLAN: "feat: access — roles, role assignments, admin bootstrap by e-mail and audit as one reusable module over auth and rbac"
 EXECUTOR: jules
 REVIEWER: none
+STATUS: running
+SESSION: 5908046515490464528
 ---
 
 > Read AGENTS.md at the repo root before any change.
