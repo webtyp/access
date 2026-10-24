@@ -34,7 +34,7 @@ require (
 	webtyp.com/escape v0.1.0 // indirect
 	webtyp.com/events v0.1.0 // indirect
 	webtyp.com/font v0.0.5 // indirect
-	webtyp.com/form v0.4.43 // indirect
+	webtyp.com/form v0.4.52 // indirect
 	webtyp.com/icons v0.0.33 // indirect
 	webtyp.com/json v0.5.30 // indirect
 	webtyp.com/keyring v0.2.4 // indirect
