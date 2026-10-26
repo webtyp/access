@@ -38,7 +38,7 @@ require (
 	webtyp.com/icons v0.0.33 // indirect
 	webtyp.com/json v0.5.30 // indirect
 	webtyp.com/keyring v0.2.4 // indirect
-	webtyp.com/lang v0.1.9 // indirect
+	webtyp.com/lang v0.1.10 // indirect
 	webtyp.com/msgtype v0.1.0 // indirect
 	webtyp.com/user v0.3.14 // indirect
 	webtyp.com/webauthn v0.1.6 // indirect
