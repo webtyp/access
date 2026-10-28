@@ -3,22 +3,22 @@ module webtyp.com/access
 go 1.26.8
 
 require (
-	webtyp.com/auth v0.0.80
+	webtyp.com/auth v0.0.84
 	webtyp.com/ddl v0.0.32
 	webtyp.com/dom v0.13.29
 	webtyp.com/fmt v1.0.0
 	webtyp.com/html v0.0.30
-	webtyp.com/input v0.0.26
-	webtyp.com/layout v0.3.77
-	webtyp.com/model v0.2.8
+	webtyp.com/input v0.0.28
+	webtyp.com/layout v0.3.79
+	webtyp.com/model v0.2.9
 	webtyp.com/orm v0.12.15
-	webtyp.com/rbac v0.0.22
+	webtyp.com/rbac v0.0.25
 	webtyp.com/router v0.4.9
 	webtyp.com/storage v0.1.8
 	webtyp.com/svg v0.3.33
 	webtyp.com/time v0.6.2
 	webtyp.com/unixid v0.3.1
-	webtyp.com/view v0.6.46
+	webtyp.com/view v0.6.48
 )
 
 require (
@@ -26,7 +26,7 @@ require (
 	webtyp.com/base64 v0.0.6 // indirect
 	webtyp.com/calendar v0.1.0 // indirect
 	webtyp.com/color v0.1.2 // indirect
-	webtyp.com/components v0.8.51 // indirect
+	webtyp.com/components v0.8.57 // indirect
 	webtyp.com/crypto v0.0.30 // indirect
 	webtyp.com/css v0.4.30 // indirect
 	webtyp.com/dbus v0.1.1 // indirect

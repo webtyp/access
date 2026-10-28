@@ -9,21 +9,19 @@ import (
 )
 
 type AuditEntry struct {
-	Id         string
+	Id string
 	ActorEmail string
-	Action     string
-	Target     string
-	Detail     string
-	CreatedAt  time.Nano
+	Action string
+	Target string
+	Detail string
+	CreatedAt time.Nano
 }
 
 func (m *AuditEntry) ModelName() string { return "access_audit" }
 
 func (m *AuditEntry) Schema() []model.Field { return AuditEntryModel.Fields }
 
-func (m *AuditEntry) Pointers() []any {
-	return []any{&m.Id, &m.ActorEmail, &m.Action, &m.Target, &m.Detail, (*int64)(&m.CreatedAt)}
-}
+func (m *AuditEntry) Pointers() []any { return []any{&m.Id, &m.ActorEmail, &m.Action, &m.Target, &m.Detail, (*int64)(&m.CreatedAt)} }
 
 func (m *AuditEntry) IsNil() bool { return m == nil }
 
@@ -32,39 +30,25 @@ func (m *AuditEntry) EncodeFields(w model.FieldWriter) {
 	w.String("actor_email", m.ActorEmail)
 	w.String("action", m.Action)
 	w.String("target", m.Target)
-	if m.Detail != "" {
-		w.String("detail", m.Detail)
-	}
+	if m.Detail != "" { w.String("detail", m.Detail) }
 	w.Int("created_at", int64(m.CreatedAt))
 }
 
 func (m *AuditEntry) DecodeFields(r model.FieldReader) {
-	if v, ok := r.String("id"); ok {
-		m.Id = v
-	}
-	if v, ok := r.String("actor_email"); ok {
-		m.ActorEmail = v
-	}
-	if v, ok := r.String("action"); ok {
-		m.Action = v
-	}
-	if v, ok := r.String("target"); ok {
-		m.Target = v
-	}
-	if v, ok := r.String("detail"); ok {
-		m.Detail = v
-	}
-	if v, ok := r.Int("created_at"); ok {
-		m.CreatedAt = time.Nano(v)
-	}
+	if v, ok := r.String("id"); ok { m.Id = v }
+	if v, ok := r.String("actor_email"); ok { m.ActorEmail = v }
+	if v, ok := r.String("action"); ok { m.Action = v }
+	if v, ok := r.String("target"); ok { m.Target = v }
+	if v, ok := r.String("detail"); ok { m.Detail = v }
+	if v, ok := r.Int("created_at"); ok { m.CreatedAt = time.Nano(v) }
 }
 
 type AuditEntryList []*AuditEntry
 
-func (s *AuditEntryList) Len() int                         { return len(*s) }
-func (s *AuditEntryList) At(i int) model.Fielder           { return (*s)[i] }
-func (s *AuditEntryList) Append() model.Fielder            { v := &AuditEntry{}; *s = append(*s, v); return v }
-func (s *AuditEntryList) IsNil() bool                      { return s == nil }
+func (s *AuditEntryList) Len() int             { return len(*s) }
+func (s *AuditEntryList) At(i int) model.Fielder { return (*s)[i] }
+func (s *AuditEntryList) Append() model.Fielder  { v := &AuditEntry{}; *s = append(*s, v); return v }
+func (s *AuditEntryList) IsNil() bool          { return s == nil }
 func (s *AuditEntryList) EncodeFields(_ model.FieldWriter) {}
 func (s *AuditEntryList) DecodeFields(_ model.FieldReader) {}
 
@@ -72,20 +56,24 @@ func (m *AuditEntry) Validate(action byte) error {
 	return model.ValidateFields(action, m)
 }
 
+func (m *AuditEntry) Item() model.Item {
+	return model.Item{ID: m.Id, Label: m.ActorEmail, Description: model.JoinItem(m.Action, m.Target)}
+}
+
 var AuditEntry_ = struct {
-	Id         string
+	Id string
 	ActorEmail string
-	Action     string
-	Target     string
-	Detail     string
-	CreatedAt  string
+	Action string
+	Target string
+	Detail string
+	CreatedAt string
 }{
-	Id:         "id",
+	Id: "id",
 	ActorEmail: "actor_email",
-	Action:     "action",
-	Target:     "target",
-	Detail:     "detail",
-	CreatedAt:  "created_at",
+	Action: "action",
+	Target: "target",
+	Detail: "detail",
+	CreatedAt: "created_at",
 }
 
 func ReadOneAuditEntry(qb *orm.QB, model *AuditEntry) (*AuditEntry, error) {
@@ -106,21 +94,19 @@ func ReadAllAuditEntry(qb *orm.QB) (AuditEntryList, error) {
 }
 
 type RoleRecord struct {
-	Id          string
-	Code        string
-	Name        string
+	Id string
+	Code string
+	Name string
 	Description string
-	SessionTtl  int64
-	UserCount   int64
+	SessionTtl int64
+	UserCount int64
 }
 
 func (m *RoleRecord) ModelName() string { return "access_role" }
 
 func (m *RoleRecord) Schema() []model.Field { return RoleRecordModel.Fields }
 
-func (m *RoleRecord) Pointers() []any {
-	return []any{&m.Id, &m.Code, &m.Name, &m.Description, &m.SessionTtl, &m.UserCount}
-}
+func (m *RoleRecord) Pointers() []any { return []any{&m.Id, &m.Code, &m.Name, &m.Description, &m.SessionTtl, &m.UserCount} }
 
 func (m *RoleRecord) IsNil() bool { return m == nil }
 
@@ -128,44 +114,26 @@ func (m *RoleRecord) EncodeFields(w model.FieldWriter) {
 	w.String("id", m.Id)
 	w.String("code", m.Code)
 	w.String("name", m.Name)
-	if m.Description != "" {
-		w.String("description", m.Description)
-	}
-	if m.SessionTtl != 0 {
-		w.Int("session_ttl", m.SessionTtl)
-	}
-	if m.UserCount != 0 {
-		w.Int("user_count", m.UserCount)
-	}
+	if m.Description != "" { w.String("description", m.Description) }
+	if m.SessionTtl != 0 { w.Int("session_ttl", m.SessionTtl) }
+	if m.UserCount != 0 { w.Int("user_count", m.UserCount) }
 }
 
 func (m *RoleRecord) DecodeFields(r model.FieldReader) {
-	if v, ok := r.String("id"); ok {
-		m.Id = v
-	}
-	if v, ok := r.String("code"); ok {
-		m.Code = v
-	}
-	if v, ok := r.String("name"); ok {
-		m.Name = v
-	}
-	if v, ok := r.String("description"); ok {
-		m.Description = v
-	}
-	if v, ok := r.Int("session_ttl"); ok {
-		m.SessionTtl = v
-	}
-	if v, ok := r.Int("user_count"); ok {
-		m.UserCount = v
-	}
+	if v, ok := r.String("id"); ok { m.Id = v }
+	if v, ok := r.String("code"); ok { m.Code = v }
+	if v, ok := r.String("name"); ok { m.Name = v }
+	if v, ok := r.String("description"); ok { m.Description = v }
+	if v, ok := r.Int("session_ttl"); ok { m.SessionTtl = v }
+	if v, ok := r.Int("user_count"); ok { m.UserCount = v }
 }
 
 type RoleRecordList []*RoleRecord
 
-func (s *RoleRecordList) Len() int                         { return len(*s) }
-func (s *RoleRecordList) At(i int) model.Fielder           { return (*s)[i] }
-func (s *RoleRecordList) Append() model.Fielder            { v := &RoleRecord{}; *s = append(*s, v); return v }
-func (s *RoleRecordList) IsNil() bool                      { return s == nil }
+func (s *RoleRecordList) Len() int             { return len(*s) }
+func (s *RoleRecordList) At(i int) model.Fielder { return (*s)[i] }
+func (s *RoleRecordList) Append() model.Fielder  { v := &RoleRecord{}; *s = append(*s, v); return v }
+func (s *RoleRecordList) IsNil() bool          { return s == nil }
 func (s *RoleRecordList) EncodeFields(_ model.FieldWriter) {}
 func (s *RoleRecordList) DecodeFields(_ model.FieldReader) {}
 
@@ -173,12 +141,49 @@ func (m *RoleRecord) Validate(action byte) error {
 	return model.ValidateFields(action, m)
 }
 
+func (m *RoleRecord) Item() model.Item {
+	return model.Item{ID: m.Id, Label: m.Name, Description: m.Code}
+}
+
+var RoleRecord_ = struct {
+	Id string
+	Code string
+	Name string
+	Description string
+	SessionTtl string
+	UserCount string
+}{
+	Id: "id",
+	Code: "code",
+	Name: "name",
+	Description: "description",
+	SessionTtl: "session_ttl",
+	UserCount: "user_count",
+}
+
+func ReadOneRoleRecord(qb *orm.QB, model *RoleRecord) (*RoleRecord, error) {
+	err := qb.ReadOne()
+	if err != nil {
+		return nil, err
+	}
+	return model, nil
+}
+
+func ReadAllRoleRecord(qb *orm.QB) (RoleRecordList, error) {
+	var results RoleRecordList
+	err := qb.ReadAll(
+		func() model.Model { return &RoleRecord{} },
+		func(m model.Model) { results = append(results, m.(*RoleRecord)) },
+	)
+	return results, err
+}
+
 type Assignment struct {
-	Id       string
-	Email    string
+	Id string
+	Email string
 	RoleCode string
-	UserId   string
-	Name     string
+	UserId string
+	Name string
 }
 
 func (m *Assignment) ModelName() string { return "access_assignment" }
@@ -193,41 +198,62 @@ func (m *Assignment) EncodeFields(w model.FieldWriter) {
 	w.String("id", m.Id)
 	w.String("email", m.Email)
 	w.String("role_code", m.RoleCode)
-	if m.UserId != "" {
-		w.String("user_id", m.UserId)
-	}
-	if m.Name != "" {
-		w.String("name", m.Name)
-	}
+	if m.UserId != "" { w.String("user_id", m.UserId) }
+	if m.Name != "" { w.String("name", m.Name) }
 }
 
 func (m *Assignment) DecodeFields(r model.FieldReader) {
-	if v, ok := r.String("id"); ok {
-		m.Id = v
-	}
-	if v, ok := r.String("email"); ok {
-		m.Email = v
-	}
-	if v, ok := r.String("role_code"); ok {
-		m.RoleCode = v
-	}
-	if v, ok := r.String("user_id"); ok {
-		m.UserId = v
-	}
-	if v, ok := r.String("name"); ok {
-		m.Name = v
-	}
+	if v, ok := r.String("id"); ok { m.Id = v }
+	if v, ok := r.String("email"); ok { m.Email = v }
+	if v, ok := r.String("role_code"); ok { m.RoleCode = v }
+	if v, ok := r.String("user_id"); ok { m.UserId = v }
+	if v, ok := r.String("name"); ok { m.Name = v }
 }
 
 type AssignmentList []*Assignment
 
-func (s *AssignmentList) Len() int                         { return len(*s) }
-func (s *AssignmentList) At(i int) model.Fielder           { return (*s)[i] }
-func (s *AssignmentList) Append() model.Fielder            { v := &Assignment{}; *s = append(*s, v); return v }
-func (s *AssignmentList) IsNil() bool                      { return s == nil }
+func (s *AssignmentList) Len() int             { return len(*s) }
+func (s *AssignmentList) At(i int) model.Fielder { return (*s)[i] }
+func (s *AssignmentList) Append() model.Fielder  { v := &Assignment{}; *s = append(*s, v); return v }
+func (s *AssignmentList) IsNil() bool          { return s == nil }
 func (s *AssignmentList) EncodeFields(_ model.FieldWriter) {}
 func (s *AssignmentList) DecodeFields(_ model.FieldReader) {}
 
 func (m *Assignment) Validate(action byte) error {
 	return model.ValidateFields(action, m)
+}
+
+func (m *Assignment) Item() model.Item {
+	return model.Item{ID: m.Id, Label: m.Email, Description: m.RoleCode}
+}
+
+var Assignment_ = struct {
+	Id string
+	Email string
+	RoleCode string
+	UserId string
+	Name string
+}{
+	Id: "id",
+	Email: "email",
+	RoleCode: "role_code",
+	UserId: "user_id",
+	Name: "name",
+}
+
+func ReadOneAssignment(qb *orm.QB, model *Assignment) (*Assignment, error) {
+	err := qb.ReadOne()
+	if err != nil {
+		return nil, err
+	}
+	return model, nil
+}
+
+func ReadAllAssignment(qb *orm.QB) (AssignmentList, error) {
+	var results AssignmentList
+	err := qb.ReadAll(
+		func() model.Model { return &Assignment{} },
+		func(m model.Model) { results = append(results, m.(*Assignment)) },
+	)
+	return results, err
 }
