@@ -4,13 +4,13 @@ go 1.26.8
 
 require (
 	webtyp.com/auth v0.0.80
-	webtyp.com/ddl v0.0.17
+	webtyp.com/ddl v0.0.32
 	webtyp.com/dom v0.13.29
 	webtyp.com/fmt v1.0.0
 	webtyp.com/html v0.0.30
 	webtyp.com/input v0.0.26
 	webtyp.com/layout v0.3.77
-	webtyp.com/model v0.2.7
+	webtyp.com/model v0.2.8
 	webtyp.com/orm v0.12.15
 	webtyp.com/rbac v0.0.22
 	webtyp.com/router v0.4.9
