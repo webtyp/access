@@ -2,8 +2,10 @@
 PLAN: "feat!: list rows declared on the model fields (Row/Options); Item() removed"
 EXECUTOR: jules
 REVIEWER: none
-STATUS: running
+STATUS: review
 SESSION: 6968692468430378003
+PR: https://github.com/webtyp/access/pull/3
+REVIEWED_COMMIT: 07e040c33ed0cb98502364bd62dfb6e17147e52b
 ---
 
 > Read AGENTS.md at the repo root before any change.
