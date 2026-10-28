@@ -7,6 +7,7 @@ import (
 	"webtyp.com/access/ui"
 	"webtyp.com/model"
 	"webtyp.com/router/loopback"
+	"webtyp.com/view"
 )
 
 func TestItemizers(t *testing.T) {
@@ -18,13 +19,13 @@ func TestItemizers(t *testing.T) {
 
 	a := &access.Assignment{Id: "admin/u1", Email: "admin@test.com", RoleCode: "admin", Name: "Boss"}
 	itA := a.Item()
-	if itA.ID != "admin/u1" || itA.Label != "admin@test.com" || itA.Description != "Boss (admin)" {
+	if itA.ID != "admin/u1" || itA.Label != "admin@test.com" || itA.Description != "admin" {
 		t.Errorf("unexpected Assignment.Item(): %+v", itA)
 	}
 
 	e := &access.AuditEntry{Id: "aud1", ActorEmail: "admin@test.com", Action: "role.save", Target: "admin"}
 	itE := e.Item()
-	if itE.ID != "aud1" || itE.Label != "admin@test.com" || itE.Description != "role.save admin" {
+	if itE.ID != "aud1" || itE.Label != "admin@test.com" || itE.Description != "role.save · admin" {
 		t.Errorf("unexpected AuditEntry.Item(): %+v", itE)
 	}
 }
@@ -35,7 +36,8 @@ func TestUIBrowserModules(t *testing.T) {
 		t.Fatalf("seed.Load: %v", err)
 	}
 
-	caller := loopback.ActingAs("p1", "admin-1", m)
+	rawCaller := loopback.ActingAs("p1", "admin-1", m)
+	caller := view.NewRecords().Caller(rawCaller)
 	mods, err := ui.Browser(caller, &seqIDs{})
 	if err != nil {
 		t.Fatalf("ui.Browser: %v", err)
@@ -62,7 +64,8 @@ func TestPresentersReload(t *testing.T) {
 		t.Fatalf("seed.Load: %v", err)
 	}
 
-	caller := loopback.ActingAs("p1", "admin-1", m)
+	rawCaller := loopback.ActingAs("p1", "admin-1", m)
+	caller := view.NewRecords().Caller(rawCaller)
 
 	rolesPres := access.NewRolesView(caller)
 	rolesPres.Reload(func(err error) {

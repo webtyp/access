@@ -12,41 +12,6 @@ const (
 	TitleAudit       = "Audit"
 )
 
-// Item projects a RoleRecord as a view.Item (view.Itemizer).
-func (r *RoleRecord) Item() view.Item {
-	return view.Item{
-		ID:          r.Id,
-		Label:       r.Name,
-		Description: r.Code,
-	}
-}
-
-// Item projects an Assignment as a view.Item (view.Itemizer).
-func (a *Assignment) Item() view.Item {
-	desc := a.RoleCode
-	if a.Name != "" {
-		desc = a.Name + " (" + a.RoleCode + ")"
-	}
-	return view.Item{
-		ID:          a.Id,
-		Label:       a.Email,
-		Description: desc,
-	}
-}
-
-// Item projects an AuditEntry as a view.Item (view.Itemizer).
-func (e *AuditEntry) Item() view.Item {
-	desc := e.Action + " " + e.Target
-	if e.Detail != "" {
-		desc += " — " + e.Detail
-	}
-	return view.Item{
-		ID:          e.Id,
-		Label:       e.ActorEmail,
-		Description: desc,
-	}
-}
-
 // NewRolesView builds the Presenter for the roles CRUD screen.
 func NewRolesView(caller router.Caller) view.Presenter {
 	b := view.NewCallerLister(caller,

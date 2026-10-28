@@ -155,13 +155,15 @@ func (m *Module) opSaveRoles(ctx router.Context) {
 		return
 	}
 	actor := ctx.UserID()
+	var last RoleRecord
 	for _, rec := range args.Records {
 		if err := m.SaveRole(actor, rec); err != nil {
 			writeError(ctx, err)
 			return
 		}
+		last = rec
 	}
-	ctx.WriteStatus(200)
+	ctx.Encode(&last)
 }
 
 func (m *Module) opDeleteRoles(ctx router.Context) {
