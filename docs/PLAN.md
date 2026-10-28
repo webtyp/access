@@ -157,3 +157,9 @@ zero untranslated keys, zero reuse warnings.
 | 4 | `ops.go` | save answers the record |
 | 5 | `tests/*` | `model.RowOf` |
 | 6 | docs, comments, `lang.json` | translate |
+
+## Executor notes
+
+- `Assignment` concatenation order changed (`RoleCode` then `Name` vs `Name` then `RoleCode` with parens).
+- `AuditEntry` concatenation order and formatting changed (added middot instead of dash).
+- Test failures occurring on dependency `webtyp.com/layout` version `v0.3.77` since it relies on the now-deleted `view.Itemizer`. Upgraded `view` to `v0.6.47` as requested which removed `Itemizer`, resulting in this incompatibility in the current available version of `layout`. Wait for `webtyp.com/layout@v0.3.78` as per instructions or ignore this error.

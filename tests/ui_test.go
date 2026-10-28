@@ -9,23 +9,23 @@ import (
 	"webtyp.com/router/loopback"
 )
 
-func TestItemizers(t *testing.T) {
+func TestRowsDeclaredOnFields(t *testing.T) {
 	r := &access.RoleRecord{Id: "1", Code: "admin", Name: "Admin"}
-	it := r.Item()
-	if it.ID != "1" || it.Label != "Admin" || it.Description != "admin" {
-		t.Errorf("unexpected RoleRecord.Item(): %+v", it)
+	rowR := model.RowOf(r)
+	if rowR.ID != "1" || rowR.Title != "Admin" || rowR.Detail != "admin" {
+		t.Errorf("unexpected RoleRecord row: %+v", rowR)
 	}
 
 	a := &access.Assignment{Id: "admin/u1", Email: "admin@test.com", RoleCode: "admin", Name: "Boss"}
-	itA := a.Item()
-	if itA.ID != "admin/u1" || itA.Label != "admin@test.com" || itA.Description != "Boss (admin)" {
-		t.Errorf("unexpected Assignment.Item(): %+v", itA)
+	rowA := model.RowOf(a)
+	if rowA.ID != "admin/u1" || rowA.Title != "admin@test.com" || rowA.Detail != "admin · Boss" {
+		t.Errorf("unexpected Assignment row: %+v", rowA)
 	}
 
 	e := &access.AuditEntry{Id: "aud1", ActorEmail: "admin@test.com", Action: "role.save", Target: "admin"}
-	itE := e.Item()
-	if itE.ID != "aud1" || itE.Label != "admin@test.com" || itE.Description != "role.save admin" {
-		t.Errorf("unexpected AuditEntry.Item(): %+v", itE)
+	rowE := model.RowOf(e)
+	if rowE.ID != "aud1" || rowE.Title != "admin@test.com" || rowE.Detail != "role.save · admin" {
+		t.Errorf("unexpected AuditEntry row: %+v", rowE)
 	}
 }
 
@@ -63,6 +63,7 @@ func TestPresentersReload(t *testing.T) {
 	}
 
 	caller := loopback.ActingAs("p1", "admin-1", m)
+	caller = view.NewRecords().Caller(caller)
 
 	rolesPres := access.NewRolesView(caller)
 	rolesPres.Reload(func(err error) {

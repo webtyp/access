@@ -2,11 +2,11 @@ package ui
 
 import (
 	"webtyp.com/access"
-	"webtyp.com/fmt"
 	"webtyp.com/layout/crudview"
 	"webtyp.com/layout/platformd"
 	"webtyp.com/model"
 	"webtyp.com/router"
+	"webtyp.com/view"
 )
 
 // RolesBrowser builds the roles management UI module.
@@ -39,19 +39,6 @@ func AssignmentsBrowser(caller router.Caller, ids model.IDGenerator) (platformd.
 		return nil, err
 	}
 
-	// Dynamically populate available role codes for the select dropdown
-	out := &access.RoleRecordList{}
-	caller.Call(access.ModelName+"."+access.OpListRoles, nil, out, func(err error) {
-		if err != nil {
-			return
-		}
-		opts := make([]fmt.KeyValue, 0, len(*out))
-		for _, r := range *out {
-			opts = append(opts, fmt.KeyValue{Key: r.Code, Value: r.Name})
-		}
-		v.SetOptions("role_code", opts...)
-	})
-
 	return platformd.NewUIModule(ID+".assignments", LabelAssignments, IconAssignments, v), nil
 }
 
@@ -71,6 +58,7 @@ func AuditBrowser(caller router.Caller, ids model.IDGenerator) (platformd.UIModu
 // Browser builds all three access administration screens in standard order:
 // Roles, Assignments, Audit.
 func Browser(caller router.Caller, ids model.IDGenerator) ([]platformd.UIModule, error) {
+	caller = view.NewRecords().Caller(caller)
 	rolesMod, err := RolesBrowser(caller, ids)
 	if err != nil {
 		return nil, err
