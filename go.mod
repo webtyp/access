@@ -3,7 +3,7 @@ module webtyp.com/access
 go 1.26.8
 
 require (
-	webtyp.com/auth v0.0.84
+	webtyp.com/auth v0.0.86
 	webtyp.com/ddl v0.0.32
 	webtyp.com/dom v0.13.29
 	webtyp.com/fmt v1.0.0
@@ -14,7 +14,7 @@ require (
 	webtyp.com/model v0.2.10
 	webtyp.com/orm v0.12.15
 	webtyp.com/rbac v0.0.25
-	webtyp.com/router v0.4.11
+	webtyp.com/router v0.4.12
 	webtyp.com/storage v0.1.8
 	webtyp.com/svg v0.3.33
 	webtyp.com/time v0.6.2
