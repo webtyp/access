@@ -257,3 +257,4 @@ func ReadAllAssignment(qb *orm.QB) (AssignmentList, error) {
 	)
 	return results, err
 }
+

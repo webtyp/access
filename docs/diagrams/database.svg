@@ -1,0 +1,246 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="erd" viewBox="0 0 402 366" width="100%"><style>:root {
+  --color-primary: #654FF0;
+  --color-on-primary: #FFFFFF;
+  --color-success: #1e7a30;
+  --color-on-success: #FFFFFF;
+  --color-danger: #ba2c0d;
+  --color-on-danger: #FFFFFF;
+  --color-accent: #e8a33d;
+  --color-on-accent: #1C1C1E;
+  --color-primary-gradient: #00ADD8;
+  --color-primary-image: linear-gradient(135deg, var(--color-primary,#654FF0), var(--color-primary-gradient,#00ADD8));
+  --color-primary-image-stops: var(--color-primary,#654FF0), var(--color-primary-gradient,#00ADD8);
+}
+
+:root {
+  --color-background: #FFFFFF;
+  --color-on-background: #1C1C1E;
+  --color-surface: #F2F2F7;
+  --color-on-surface: #1C1C1E;
+  --color-outline: #D1D1D6;
+  --color-muted: #6E6E73;
+  --color-surface-sunken: #dfdfe3;
+  --color-selection: #654ff026;
+  --color-on-selection: #1C1C1E;
+  --color-accent-wash: #e8a33d26;
+  --color-accent-hover: #e8a33db3;
+  --color-danger-wash: #ba2c0d4d;
+  --color-background-light: #FFFFFF;
+  --color-background-dark: #0D1117;
+  --color-on-background-light: #1C1C1E;
+  --color-on-background-dark: #E6EDF3;
+  --color-surface-light: #F2F2F7;
+  --color-surface-dark: #161B22;
+  --color-on-surface-light: #1C1C1E;
+  --color-on-surface-dark: #E6EDF3;
+  --color-outline-light: #D1D1D6;
+  --color-outline-dark: #30363D;
+  --color-muted-light: #6E6E73;
+  --color-muted-dark: #8B949E;
+}
+
+@supports (color: light-dark(#000, #fff)) and (color: color-mix(in oklab, #000, #fff)) {
+:root {
+  --color-background: light-dark(#FFFFFF, #0D1117);
+  --color-on-background: light-dark(#1C1C1E, #E6EDF3);
+  --color-surface: light-dark(#F2F2F7, #161B22);
+  --color-on-surface: light-dark(#1C1C1E, #E6EDF3);
+  --color-outline: light-dark(#D1D1D6, #30363D);
+  --color-muted: light-dark(#6E6E73, #8B949E);
+  --color-surface-sunken: color-mix(in oklab, light-dark(#F2F2F7,#161B22), light-dark(#1C1C1E,#E6EDF3) 8%);
+  --color-selection: color-mix(in oklab, #654FF0, transparent 85%);
+  --color-on-selection: light-dark(#1C1C1E,#E6EDF3);
+  --color-accent-wash: color-mix(in oklab, #e8a33d, transparent 85%);
+  --color-accent-hover: color-mix(in oklab, #e8a33d, transparent 30%);
+  --color-danger-wash: color-mix(in oklab, #ba2c0d, transparent 70%);
+}
+
+}
+
+:root {
+  --mix-hover: 15%;
+  --mix-focus: 30%;
+  --mix-press: 45%;
+}
+
+:root {
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.5rem;
+  --text-2xl: 2rem;
+}
+
+:root {
+  --space-0: 0;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+}
+
+:root {
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+}
+
+:root {
+  --font-sans: "Roboto", system-ui, -apple-system, sans-serif;
+  --leading-normal: 1.5;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+}
+
+:root {
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.10);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.10);
+}
+
+:root {
+  --duration-fast: 150ms;
+  --duration-base: 250ms;
+  --duration-slow: 400ms;
+  --ease-in-out: cubic-bezier(0.4, 0,   0.2, 1);
+}
+
+:root {
+  --z-base: 0;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-modal: 300;
+  --z-toast: 400;
+  --z-tooltip: 500;
+}
+
+:root {
+  --bp-sm: 640px;
+  --bp-md: 768px;
+  --bp-lg: 1024px;
+  --bp-xl: 1280px;
+}
+
+:root {
+  --max-w-readable: 65ch;
+}
+
+:root {
+  --column-narrow: 12rem;
+  --column-medium: 20rem;
+  --column-wide: 30rem;
+  --rail-narrow: 3.5rem;
+  --rail-wide: 12rem;
+  --control-height: 3.5rem;
+  --control-height-compact: 2.75rem;
+  --control-width: 2.75rem;
+  --chip-width: 7rem;
+  --chip-height: 1.25rem;
+  --veil-blur: 4px;
+}
+
+:root {
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --viewport-h: 100dvh;
+}
+
+:root:not([data-theme]) {
+  color-scheme: light;
+}
+
+@layer tokens, primitives, widgets, states;
+
+@layer widgets {
+.erd {
+  font-family: var(--font-sans,"Roboto", system-ui, -apple-system, sans-serif);
+  font-size: var(--text-xs,0.75rem);
+}
+.erd__band {
+  fill: #dfdfe3;
+  fill: var(--color-surface-sunken);
+  stroke: #D1D1D6;
+  stroke: var(--color-outline);
+}
+.erd__band-title {
+  font-size: var(--text-sm,0.875rem);
+  font-weight: var(--font-weight-bold,700);
+  color: #654FF0;
+  color: var(--color-primary);
+  fill: currentColor;
+}
+.erd__box {
+  fill: #F2F2F7;
+  fill: var(--color-surface);
+  stroke: #D1D1D6;
+  stroke: var(--color-outline);
+}
+.erd__box-error {
+  fill: #ba2c0d4d;
+  fill: var(--color-danger-wash);
+}
+.erd__box-external {
+  fill: #FFFFFF;
+  fill: var(--color-background);
+  stroke-dasharray: var(--space-1,0.25rem) var(--space-1,0.25rem);
+}
+.erd__column {
+  fill: #1C1C1E;
+  fill: var(--color-on-surface);
+  stroke: none;
+}
+.erd__column-error {
+  color: #ba2c0d;
+  color: var(--color-danger);
+  fill: currentColor;
+}
+.erd__column-key {
+  font-weight: var(--font-weight-bold,700);
+  color: #654FF0;
+  color: var(--color-primary);
+  fill: currentColor;
+}
+.erd__column-type {
+  fill: #6E6E73;
+  fill: var(--color-muted);
+  stroke: none;
+}
+.erd__edge {
+  fill: none;
+  stroke: #654FF0;
+  stroke: var(--color-primary);
+}
+.erd__edge-error {
+  fill: none;
+  stroke: #ba2c0d;
+  stroke: var(--color-danger);
+}
+.erd__edge-soft {
+  fill: none;
+  stroke: #654FF0;
+  stroke: var(--color-primary);
+  stroke-dasharray: var(--space-1,0.25rem) var(--space-1,0.25rem);
+}
+.erd__head {
+  fill: #654FF0;
+  fill: var(--color-primary);
+}
+.erd__name {
+  fill: #FFFFFF;
+  fill: var(--color-on-primary);
+  stroke: none;
+  font-weight: var(--font-weight-bold,700);
+}
+}
+
+
+
+</style><rect class="erd__band" x="0" y="0" width="402" height="366" rx="6"/><text class="erd__band-title" x="16" y="20">Module access</text><path class="erd__edge erd__edge-soft" d="M247 99 C207 99 153 338 113 338"/><g id="erd-table-access_audit"><title>access_audit</title><rect class="erd__box" x="16" y="30" width="167" height="132" rx="4"/><rect class="erd__head" x="17" y="31" width="165" height="23" rx="4"/><text class="erd__name" x="26" y="46">access_audit</text><text class="erd__column" x="26" y="67">id  <tspan class="erd__column-type">text</tspan>  <tspan class="erd__column-key">PK</tspan></text><text class="erd__column" x="26" y="85">actor_email  <tspan class="erd__column-type">text</tspan></text><text class="erd__column" x="26" y="103">action  <tspan class="erd__column-type">text</tspan></text><text class="erd__column" x="26" y="121">target  <tspan class="erd__column-type">text</tspan></text><text class="erd__column" x="26" y="139">detail  <tspan class="erd__column-type">text</tspan></text><text class="erd__column" x="26" y="157">created_at  <tspan class="erd__column-type">nano_time</tspan></text></g><g id="erd-table-access_role"><title>access_role</title><rect class="erd__box" x="16" y="178" width="139" height="132" rx="4"/><rect class="erd__head" x="17" y="179" width="137" height="23" rx="4"/><text class="erd__name" x="26" y="194">access_role</text><text class="erd__column" x="26" y="215">id  <tspan class="erd__column-type">text</tspan>  <tspan class="erd__column-key">PK</tspan></text><text class="erd__column" x="26" y="233">code  <tspan class="erd__column-type">text</tspan></text><text class="erd__column" x="26" y="251">name  <tspan class="erd__column-type">text</tspan></text><text class="erd__column" x="26" y="269">description  <tspan class="erd__column-type">text</tspan></text><text class="erd__column" x="26" y="287">session_ttl  <tspan class="erd__column-type">int</tspan></text><text class="erd__column" x="26" y="305">user_count  <tspan class="erd__column-type">int</tspan></text></g><g id="erd-table-access_assignment"><title>access_assignment</title><rect class="erd__box" x="247" y="30" width="139" height="114" rx="4"/><rect class="erd__head" x="248" y="31" width="137" height="23" rx="4"/><text class="erd__name" x="257" y="46">access_assignment</text><text class="erd__column" x="257" y="67">id  <tspan class="erd__column-type">text</tspan>  <tspan class="erd__column-key">PK</tspan></text><text class="erd__column" x="257" y="85">email  <tspan class="erd__column-type">text</tspan></text><text class="erd__column" x="257" y="103">role_code  <tspan class="erd__column-type">text</tspan></text><text class="erd__column" x="257" y="121">user_id  <tspan class="erd__column-type">text</tspan></text><text class="erd__column" x="257" y="139">name  <tspan class="erd__column-type">text</tspan></text></g><g id="erd-table-role_record"><title>role_record</title><rect class="erd__box erd__box-external" x="16" y="326" width="97" height="24" rx="4"/><rect class="erd__head" x="17" y="327" width="95" height="23" rx="4"/><text class="erd__name" x="26" y="342">role_record</text></g></svg>
