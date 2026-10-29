@@ -2,8 +2,10 @@
 PLAN: "refactor(ui): Screens(caller) []view.Screen — access declares its screens as data like every module; no platformd/crudview in ui"
 EXECUTOR: jules
 REVIEWER: none
-STATUS: completed
+STATUS: review
 SESSION: 12404899667519076581
+PR: https://github.com/webtyp/access/pull/5
+REVIEWED_COMMIT: 46fe0d560a82739ed7164381d84a8005044fb57a
 ---
 
 > Read AGENTS.md at the repo root before any change.
