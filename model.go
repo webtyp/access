@@ -47,7 +47,7 @@ var AssignmentModel = model.Definition{
 	Fields: model.Fields{
 		{Name: "id", Type: model.Text(), DB: &model.FieldDB{PK: true}},
 		{Name: "email", Type: input.Email(), Label: "E-mail", NotNull: true, Item: model.ItemLabel},
-		{Name: "role_code", Type: input.Select(), Label: "Role", NotNull: true, Item: model.ItemDescription},
+		{Name: "role_code", Type: input.Select(), Label: "Role", NotNull: true, Item: model.ItemDescription, Options: &RoleRecordModel},
 		{Name: "user_id", Type: model.Text(), OmitEmpty: true},
 		{Name: "name", Type: model.Text(), OmitEmpty: true},
 	},

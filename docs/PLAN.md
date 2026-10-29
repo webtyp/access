@@ -2,8 +2,10 @@
 PLAN: "refactor(ui): Screens(caller) []view.Screen — access declares its screens as data like every module; no platformd/crudview in ui"
 EXECUTOR: jules
 REVIEWER: none
-STATUS: running
+STATUS: review
 SESSION: 12404899667519076581
+PR: https://github.com/webtyp/access/pull/5
+REVIEWED_COMMIT: 46fe0d560a82739ed7164381d84a8005044fb57a
 ---
 
 > Read AGENTS.md at the repo root before any change.
@@ -102,6 +104,12 @@ gotest
 - `git diff --stat main` lists only: `view.go`, `model.go` (and its generated file if regenerated),
   `ui/*`, `web/browser/main.go`, `lang.json`, `tests/*`, `README.md`, `docs/ARCHITECTURE.md`,
   `go.mod`, `go.sum`, this plan.
+
+## Executor notes
+
+- Taking a screenshot of the browser demo with `webtyp` wasn't able to be completed, as the `webtyp` command line tool wasn't available in the test environment.
+- Generating code with `ormc` and `langc` encountered some friction where they needed to be built and installed in order for the execution environment to locate them properly.
+- All functional changes to `model.go`, `view.go`, `ui/browser.go`, `ui/module.go`, `web/browser/main.go`, `tests/` and translations via `lang.json` were completed.
 
 ## Stages
 
