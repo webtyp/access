@@ -30,7 +30,7 @@ func TestItemizers(t *testing.T) {
 	}
 }
 
-func TestUIBrowserModules(t *testing.T) {
+func TestUIScreens(t *testing.T) {
 	m, _, _ := newEnv(t, model.AssuranceSingleFactor)
 	if err := seed.Load(m); err != nil {
 		t.Fatalf("seed.Load: %v", err)
@@ -38,22 +38,19 @@ func TestUIBrowserModules(t *testing.T) {
 
 	rawCaller := loopback.ActingAs("p1", "admin-1", m)
 	caller := view.NewRecords().Caller(rawCaller)
-	mods, err := ui.Browser(caller, &seqIDs{})
-	if err != nil {
-		t.Fatalf("ui.Browser: %v", err)
-	}
+	screens := ui.Screens(caller)
 
-	if len(mods) != 3 {
-		t.Fatalf("expected 3 modules (Roles, Assignments, Audit), got %d", len(mods))
+	if len(screens) != 3 {
+		t.Fatalf("expected 3 screens (Roles, Assignments, Audit), got %d", len(screens))
 	}
 
 	expectedIDs := []string{"access.roles", "access.assignments", "access.audit"}
 	for i, exp := range expectedIDs {
-		if mods[i].ModelName() != exp {
-			t.Errorf("module %d ID: expected %q, got %q", i, exp, mods[i].ModelName())
+		if screens[i].ID != exp {
+			t.Errorf("screen %d ID: expected %q, got %q", i, exp, screens[i].ID)
 		}
-		if mods[i].View() == nil {
-			t.Errorf("module %d view is nil", i)
+		if screens[i].Presenter == nil {
+			t.Errorf("screen %d presenter is nil", i)
 		}
 	}
 }

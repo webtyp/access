@@ -11,7 +11,7 @@ import (
 	"webtyp.com/auth/authority"
 	"webtyp.com/ddl"
 	. "webtyp.com/dom"
-	. "webtyp.com/html"
+	layout_app "webtyp.com/layout/app"
 	"webtyp.com/layout/platformd"
 	"webtyp.com/model"
 	"webtyp.com/orm"
@@ -67,19 +67,15 @@ func main() {
 
 	caller := loopback.ActingAs("demo-project", "admin-1", accessMod)
 
-	views, err := ui.Browser(caller, ids)
+	menu, err := layout_app.BuildMenu(ui.Screens(caller), ids, func(model.Resource) bool { return true })
 	if err != nil {
 		panic(err)
 	}
 
-	homeView := Div().Text("Access Administration Demo")
-	homeMod := platformd.NewUIModule("home", "Home", ui.IconRoles, homeView)
-
-	allMods := append([]platformd.UIModule{homeMod}, views...)
-
 	p := &platformd.Platform{
-		DefaultID: "home",
-		Modules:   allMods,
+		DefaultID: ui.ID + ".roles",
+		Modules:   menu.Modules,
+		CanView:   menu.CanView,
 		User:      demoUser{},
 	}
 

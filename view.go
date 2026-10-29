@@ -13,7 +13,7 @@ const (
 )
 
 // NewRolesView builds the Presenter for the roles CRUD screen.
-func NewRolesView(caller router.Caller) view.Presenter {
+func NewRolesView(caller router.Caller, opts ...view.Option) view.Presenter {
 	b := view.NewCallerLister(caller,
 		view.Ops{
 			Module: ModelName,
@@ -23,11 +23,11 @@ func NewRolesView(caller router.Caller) view.Presenter {
 		},
 		func() model.ModelSlice { return &RoleRecordList{} },
 	)
-	return view.New(b, &RoleRecord{}, view.WithTitle(TitleRoles))
+	return view.New(b, &RoleRecord{}, append([]view.Option{view.WithTitle(TitleRoles)}, opts...)...)
 }
 
 // NewAssignmentsView builds the Presenter for the assignments CRUD screen.
-func NewAssignmentsView(caller router.Caller) view.Presenter {
+func NewAssignmentsView(caller router.Caller, opts ...view.Option) view.Presenter {
 	b := view.NewCallerLister(caller,
 		view.Ops{
 			Module: ModelName,
@@ -37,11 +37,11 @@ func NewAssignmentsView(caller router.Caller) view.Presenter {
 		},
 		func() model.ModelSlice { return &AssignmentList{} },
 	)
-	return view.New(b, &Assignment{}, view.WithTitle(TitleAssignments))
+	return view.New(b, &Assignment{}, append([]view.Option{view.WithTitle(TitleAssignments)}, opts...)...)
 }
 
 // NewAuditView builds the Presenter for the audit trail view (read-only list).
-func NewAuditView(caller router.Caller) view.Presenter {
+func NewAuditView(caller router.Caller, opts ...view.Option) view.Presenter {
 	b := view.NewCallerLister(caller,
 		view.Ops{
 			Module: ModelName,
@@ -49,5 +49,5 @@ func NewAuditView(caller router.Caller) view.Presenter {
 		},
 		func() model.ModelSlice { return &AuditEntryList{} },
 	)
-	return view.New(b, &AuditEntry{}, view.WithTitle(TitleAudit))
+	return view.New(b, &AuditEntry{}, append([]view.Option{view.WithTitle(TitleAudit)}, opts...)...)
 }
