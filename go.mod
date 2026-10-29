@@ -9,7 +9,7 @@ require (
 	webtyp.com/fmt v1.0.0
 	webtyp.com/html v0.0.30
 	webtyp.com/input v0.0.28
-	webtyp.com/layout v0.3.83
+	webtyp.com/layout v0.3.85
 	webtyp.com/model v0.2.9
 	webtyp.com/orm v0.12.15
 	webtyp.com/rbac v0.0.25
@@ -28,7 +28,7 @@ require (
 	webtyp.com/color v0.1.2 // indirect
 	webtyp.com/components v0.8.57 // indirect
 	webtyp.com/crypto v0.0.30 // indirect
-	webtyp.com/css v0.4.30 // indirect
+	webtyp.com/css v0.4.31 // indirect
 	webtyp.com/dbus v0.1.1 // indirect
 	webtyp.com/env v0.0.12 // indirect
 	webtyp.com/escape v0.1.0 // indirect
