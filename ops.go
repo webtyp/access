@@ -53,16 +53,15 @@ type SaveRolesArgs struct {
 	Records []RoleRecord
 }
 
-func (a *SaveRolesArgs) ModelName() string { return "save_roles_args" }
+func (a *SaveRolesArgs) ModelName() string     { return "save_roles_args" }
 func (a *SaveRolesArgs) Schema() []model.Field { return nil }
-func (a *SaveRolesArgs) Pointers() []any { return nil }
-func (a *SaveRolesArgs) IsNil() bool { return a == nil }
+func (a *SaveRolesArgs) Pointers() []any       { return nil }
+func (a *SaveRolesArgs) IsNil() bool           { return a == nil }
 func (a *SaveRolesArgs) EncodeFields(w model.FieldWriter) {
 	arr := w.Array("records", len(a.Records))
 	for i := range a.Records {
 		arr.Object(&a.Records[i])
 	}
-	arr.Close()
 }
 func (a *SaveRolesArgs) DecodeFields(r model.FieldReader) {
 	arr, ok := r.Array("records")
@@ -81,16 +80,15 @@ type AssignRolesArgs struct {
 	Records []Assignment
 }
 
-func (a *AssignRolesArgs) ModelName() string { return "assign_roles_args" }
+func (a *AssignRolesArgs) ModelName() string     { return "assign_roles_args" }
 func (a *AssignRolesArgs) Schema() []model.Field { return nil }
-func (a *AssignRolesArgs) Pointers() []any { return nil }
-func (a *AssignRolesArgs) IsNil() bool { return a == nil }
+func (a *AssignRolesArgs) Pointers() []any       { return nil }
+func (a *AssignRolesArgs) IsNil() bool           { return a == nil }
 func (a *AssignRolesArgs) EncodeFields(w model.FieldWriter) {
 	arr := w.Array("records", len(a.Records))
 	for i := range a.Records {
 		arr.Object(&a.Records[i])
 	}
-	arr.Close()
 }
 func (a *AssignRolesArgs) DecodeFields(r model.FieldReader) {
 	arr, ok := r.Array("records")
@@ -109,16 +107,15 @@ type IDsArgs struct {
 	Ids []string
 }
 
-func (a *IDsArgs) ModelName() string { return "ids_args" }
+func (a *IDsArgs) ModelName() string     { return "ids_args" }
 func (a *IDsArgs) Schema() []model.Field { return nil }
-func (a *IDsArgs) Pointers() []any { return nil }
-func (a *IDsArgs) IsNil() bool { return a == nil }
+func (a *IDsArgs) Pointers() []any       { return nil }
+func (a *IDsArgs) IsNil() bool           { return a == nil }
 func (a *IDsArgs) EncodeFields(w model.FieldWriter) {
 	arr := w.Array("ids", len(a.Ids))
 	for _, id := range a.Ids {
 		arr.String(id)
 	}
-	arr.Close()
 }
 func (a *IDsArgs) DecodeFields(r model.FieldReader) {
 	arr, ok := r.Array("ids")
