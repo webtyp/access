@@ -43,7 +43,7 @@ require (
 	webtyp.com/icons v0.0.38 // indirect
 	webtyp.com/keyring v0.2.4 // indirect
 	webtyp.com/msgtype v0.1.0 // indirect
-	webtyp.com/rpc v0.2.7 // indirect
+	webtyp.com/rpc v0.2.13 // indirect
 	webtyp.com/user v0.3.14 // indirect
 	webtyp.com/webauthn v0.1.16 // indirect
 	webtyp.com/widget v0.6.45 // indirect
