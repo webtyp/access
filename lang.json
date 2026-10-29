@@ -1,234 +1,27 @@
 {
-  "languages": [
-    "es",
-    "zh",
-    "hi",
-    "ar",
-    "pt",
-    "fr",
-    "de",
-    "ru"
-  ],
+  "languages": ["es", "zh", "hi", "ar", "pt", "fr", "de", "ru"],
   "keys": {
-    "0 keeps the application default.": [
-      "0 mantiene el por defecto.",
-      "0 ",
-      "0  ",
-      "0   ",
-      "0    ",
-      "0     ",
-      "0      ",
-      "0       "
-    ],
-    "Action": [
-      "Acción",
-      "Action1",
-      "Action2",
-      "Action3",
-      "Action4",
-      "Action5",
-      "Action6",
-      "Action7"
-    ],
-    "Assign roles to users.": [
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      ""
-    ],
-    "Assignments": [
-      "Asignaciones",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      ""
-    ],
-    "Audit": [
-      "Auditoría",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      ""
-    ],
-    "Code": [
-      "Código",
-      "Code1",
-      "Code2",
-      "Code3",
-      "Code4",
-      "Code5",
-      "Code6",
-      "Code7"
-    ],
-    "Description": [
-      "Descripción",
-      "Desc1",
-      "Desc2",
-      "Desc3",
-      "Desc4",
-      "Desc5",
-      "Desc6",
-      "Desc7"
-    ],
-    "Detail": [
-      "Detalle",
-      "Detail1",
-      "Detail2",
-      "Detail3",
-      "Detail4",
-      "Detail5",
-      "Detail6",
-      "Detail7"
-    ],
-    "E-mail": [
-      "Email",
-      "Email1",
-      "Email2",
-      "Email3",
-      "Email4",
-      "Email5",
-      "Email6",
-      "Email7"
-    ],
-    "Manage roles and their capabilities.": [
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      ""
-    ],
-    "Name": [
-      "Nombre",
-      "Name1",
-      "Name2",
-      "Name3",
-      "Name4",
-      "Name5",
-      "Name6",
-      "Name7"
-    ],
-    "Role": [
-      "Rol",
-      "Role1",
-      "Role2",
-      "Role3",
-      "Role4",
-      "Role5",
-      "Role6",
-      "Role7"
-    ],
-    "Session limit (seconds)": [
-      "Límite de sesión (segundos)",
-      "Session1",
-      "Session2",
-      "Session3",
-      "Session4",
-      "Session5",
-      "Session6",
-      "Session7"
-    ],
-    "Short identifier the permissions refer to, e.g. reception.": [
-      "Identificador corto",
-      "Id1",
-      "Id2",
-      "Id3",
-      "Id4",
-      "Id5",
-      "Id6",
-      "Id7"
-    ],
-    "Target": [
-      "Objetivo",
-      "Target1",
-      "Target2",
-      "Target3",
-      "Target4",
-      "Target5",
-      "Target6",
-      "Target7"
-    ],
-    "View the audit trail of actions.": [
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      ""
-    ],
-    "When": [
-      "Cuándo",
-      "When1",
-      "When2",
-      "When3",
-      "When4",
-      "When5",
-      "When6",
-      "When7"
-    ],
-    "Who": [
-      "Quién",
-      "Who1",
-      "Who2",
-      "Who3",
-      "Who4",
-      "Who5",
-      "Who6",
-      "Who7"
-    ],
-    "id": [
-      "identificador",
-      "identificador1",
-      "identificador2",
-      "identificador3",
-      "identificador4",
-      "identificador5",
-      "identificador6",
-      "identificador7"
-    ],
-    "name": [
-      "nombre",
-      "name1",
-      "name2",
-      "name3",
-      "name4",
-      "name5",
-      "name6",
-      "name7"
-    ],
-    "user count": [
-      "usuarios",
-      "user count1",
-      "user count2",
-      "user count3",
-      "user count4",
-      "user count5",
-      "user count6",
-      "user count7"
-    ],
-    "user id": [
-      "id de usuario",
-      "user id1",
-      "user id2",
-      "user id3",
-      "user id4",
-      "user id5",
-      "user id6",
-      "user id7"
-    ]
+    "0 keeps the application default.": ["0 mantiene el valor por defecto de la aplicación.", "0 表示使用应用的默认值。", "0 का अर्थ है ऐप्लिकेशन का डिफ़ॉल्ट मान।", "القيمة 0 تُبقي الإعداد الافتراضي للتطبيق.", "0 mantém o padrão da aplicação.", "0 conserve la valeur par défaut de l’application.", "0 behält den Standardwert der Anwendung bei.", "0 оставляет значение приложения по умолчанию."],
+    "Action": ["Acción", "操作", "कार्रवाई", "الإجراء", "Ação", "Action", "Aktion", "Действие"],
+    "Assign roles to users.": ["Asigna roles a las personas usuarias.", "为用户分配角色。", "उपयोगकर्ताओं को भूमिकाएँ सौंपें।", "إسناد الأدوار إلى المستخدمين.", "Atribua funções aos usuários.", "Attribuez des rôles aux utilisateurs.", "Weisen Sie Benutzern Rollen zu.", "Назначайте роли пользователям."],
+    "Assignments": ["Asignaciones", "分配", "असाइनमेंट", "الإسنادات", "Atribuições", "Attributions", "Zuweisungen", "Назначения"],
+    "Audit": ["Auditoría", "审计", "ऑडिट", "التدقيق", "Auditoria", "Audit", "Prüfprotokoll", "Аудит"],
+    "Code": ["Código", "代码", "कोड", "الرمز", "Código", "Code", "Code", "Код"],
+    "Description": ["Descripción", "描述", "विवरण", "الوصف", "Descrição", "Description", "Beschreibung", "Описание"],
+    "Detail": ["Detalle", "详情", "विवरण", "التفاصيل", "Detalhe", "Détail", "Detail", "Подробности"],
+    "E-mail": ["Correo", "电子邮件", "ईमेल", "البريد الإلكتروني", "E-mail", "E-mail", "E-Mail", "Эл. почта"],
+    "Manage roles and their capabilities.": ["Administra los roles y lo que cada uno permite.", "管理角色及其权限。", "भूमिकाएँ और उनकी अनुमतियाँ प्रबंधित करें।", "إدارة الأدوار وصلاحياتها.", "Gerencie as funções e o que cada uma permite.", "Gérez les rôles et ce que chacun permet.", "Verwalten Sie Rollen und ihre Berechtigungen.", "Управляйте ролями и их возможностями."],
+    "Name": ["Nombre", "名称", "नाम", "الاسم", "Nome", "Nom", "Name", "Имя"],
+    "Role": ["Rol", "角色", "भूमिका", "الدور", "Função", "Rôle", "Rolle", "Роль"],
+    "Session limit (seconds)": ["Límite de sesión (segundos)", "会话时限（秒）", "सत्र सीमा (सेकंड)", "حد الجلسة (بالثواني)", "Limite da sessão (segundos)", "Limite de session (secondes)", "Sitzungslimit (Sekunden)", "Лимит сеанса (секунды)"],
+    "Short identifier the permissions refer to, e.g. reception.": ["Identificador corto al que se refieren los permisos, p. ej. recepcion.", "权限所引用的简短标识，例如 reception。", "छोटा पहचानकर्ता जिसका अनुमतियाँ उल्लेख करती हैं, जैसे reception।", "معرّف قصير تشير إليه الصلاحيات، مثل reception.", "Identificador curto ao qual as permissões se referem, p. ex. reception.", "Identifiant court auquel se réfèrent les permissions, p. ex. reception.", "Kurze Kennung, auf die sich die Berechtigungen beziehen, z. B. reception.", "Короткий идентификатор, на который ссылаются разрешения, например reception."],
+    "Target": ["Objetivo", "目标", "लक्ष्य", "الهدف", "Alvo", "Cible", "Ziel", "Объект"],
+    "View the audit trail of actions.": ["Consulta el registro de las acciones realizadas.", "查看操作的审计记录。", "की गई कार्रवाइयों का ऑडिट रिकॉर्ड देखें।", "عرض سجل تدقيق الإجراءات.", "Consulte o registro de auditoria das ações.", "Consultez le journal d’audit des actions.", "Sehen Sie das Prüfprotokoll der Aktionen ein.", "Просматривайте журнал аудита действий."],
+    "When": ["Cuándo", "时间", "कब", "متى", "Quando", "Quand", "Wann", "Когда"],
+    "Who": ["Quién", "谁", "कौन", "من", "Quem", "Qui", "Wer", "Кто"],
+    "id": ["identificador", "标识", "पहचानकर्ता", "المعرّف", "identificador", "identifiant", "Kennung", "идентификатор"],
+    "name": ["nombre", "名称", "नाम", "الاسم", "nome", "nom", "Name", "имя"],
+    "user count": ["cantidad de usuarios", "用户数", "उपयोगकर्ता संख्या", "عدد المستخدمين", "número de usuários", "nombre d’utilisateurs", "Anzahl Benutzer", "число пользователей"],
+    "user id": ["id de usuario", "用户标识", "उपयोगकर्ता पहचानकर्ता", "معرّف المستخدم", "id do usuário", "identifiant utilisateur", "Benutzerkennung", "идентификатор пользователя"]
   }
 }

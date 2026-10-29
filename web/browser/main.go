@@ -19,6 +19,7 @@ import (
 	"webtyp.com/router/loopback"
 	"webtyp.com/storage/mem"
 	"webtyp.com/unixid"
+	"webtyp.com/view"
 )
 
 type demoUser struct{}
@@ -65,7 +66,8 @@ func main() {
 		panic(err)
 	}
 
-	caller := loopback.ActingAs("demo-project", "admin-1", accessMod)
+	// view needs one record store per page: every screen reads and saves through it.
+	caller := view.NewRecords().Caller(loopback.ActingAs("demo-project", "admin-1", accessMod))
 
 	menu, err := layout_app.BuildMenu(ui.Screens(caller), ids, func(model.Resource) bool { return true })
 	if err != nil {
