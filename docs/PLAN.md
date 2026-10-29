@@ -2,6 +2,8 @@
 PLAN: "refactor(ui): Screens(caller) []view.Screen — access declares its screens as data like every module; no platformd/crudview in ui"
 EXECUTOR: jules
 REVIEWER: none
+STATUS: running
+SESSION: 12404899667519076581
 ---
 
 > Read AGENTS.md at the repo root before any change.
