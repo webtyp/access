@@ -3,11 +3,10 @@ module webtyp.com/access
 go 1.26.8
 
 require (
-	webtyp.com/auth v0.0.86
+	webtyp.com/auth v0.0.89
 	webtyp.com/ddl v0.0.32
 	webtyp.com/dom v0.13.29
 	webtyp.com/fmt v1.0.0
-	webtyp.com/html v0.0.30
 	webtyp.com/input v0.0.28
 	webtyp.com/json v0.5.37
 	webtyp.com/lang v0.1.10
@@ -40,6 +39,7 @@ require (
 	webtyp.com/filepath v0.1.0 // indirect
 	webtyp.com/font v0.0.5 // indirect
 	webtyp.com/form v0.4.52 // indirect
+	webtyp.com/html v0.0.30 // indirect
 	webtyp.com/icons v0.0.38 // indirect
 	webtyp.com/keyring v0.2.4 // indirect
 	webtyp.com/msgtype v0.1.0 // indirect
