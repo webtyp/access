@@ -62,6 +62,7 @@ func (a *SaveRolesArgs) EncodeFields(w model.FieldWriter) {
 	for i := range a.Records {
 		arr.Object(&a.Records[i])
 	}
+	arr.Close()
 }
 func (a *SaveRolesArgs) DecodeFields(r model.FieldReader) {
 	arr, ok := r.Array("records")
@@ -89,6 +90,7 @@ func (a *AssignRolesArgs) EncodeFields(w model.FieldWriter) {
 	for i := range a.Records {
 		arr.Object(&a.Records[i])
 	}
+	arr.Close()
 }
 func (a *AssignRolesArgs) DecodeFields(r model.FieldReader) {
 	arr, ok := r.Array("records")
@@ -116,6 +118,7 @@ func (a *IDsArgs) EncodeFields(w model.FieldWriter) {
 	for _, id := range a.Ids {
 		arr.String(id)
 	}
+	arr.Close()
 }
 func (a *IDsArgs) DecodeFields(r model.FieldReader) {
 	arr, ok := r.Array("ids")
