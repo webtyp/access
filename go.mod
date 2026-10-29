@@ -9,6 +9,7 @@ require (
 	webtyp.com/fmt v1.0.0
 	webtyp.com/html v0.0.30
 	webtyp.com/input v0.0.28
+	webtyp.com/json v0.5.36
 	webtyp.com/layout v0.3.85
 	webtyp.com/model v0.2.9
 	webtyp.com/orm v0.12.15
@@ -18,7 +19,7 @@ require (
 	webtyp.com/svg v0.3.33
 	webtyp.com/time v0.6.2
 	webtyp.com/unixid v0.3.1
-	webtyp.com/view v0.6.49
+	webtyp.com/view v0.6.50
 )
 
 require (
@@ -36,7 +37,6 @@ require (
 	webtyp.com/font v0.0.5 // indirect
 	webtyp.com/form v0.4.52 // indirect
 	webtyp.com/icons v0.0.38 // indirect
-	webtyp.com/json v0.5.36 // indirect
 	webtyp.com/keyring v0.2.4 // indirect
 	webtyp.com/lang v0.1.10 // indirect
 	webtyp.com/msgtype v0.1.0 // indirect
