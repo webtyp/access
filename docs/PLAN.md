@@ -2,6 +2,8 @@
 PLAN: "feat: give a role to a person picked from a list (people without e-mail), screens grouped under one menu entry"
 EXECUTOR: jules
 REVIEWER: none
+STATUS: running
+SESSION: 4920616419145661103
 ---
 
 > Read AGENTS.md at the repo root before any change.
