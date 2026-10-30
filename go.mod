@@ -3,7 +3,7 @@ module webtyp.com/access
 go 1.26.8
 
 require (
-	webtyp.com/auth v0.0.94
+	webtyp.com/auth v0.0.96
 	webtyp.com/ddl v0.0.36
 	webtyp.com/dom v0.13.29
 	webtyp.com/fmt v1.0.0
