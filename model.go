@@ -40,15 +40,27 @@ var RoleRecordModel = model.Definition{
 	},
 }
 
+// PersonModel is a user of the app as the people screen lists it: someone a
+// role can be given to. Not a table: people live in webtyp/auth.
+var PersonModel = model.Definition{
+	Name: "access_person",
+	Fields: model.Fields{
+		{Name: "id", Type: model.Text(), DB: &model.FieldDB{PK: true}},
+		{Name: "name", Type: model.Text(), Label: "Name", Item: model.ItemLabel},
+		{Name: "email", Type: model.Text(), Label: "E-mail", OmitEmpty: true, Item: model.ItemDescription},
+		{Name: "roles", Type: model.Text(), Label: "Roles", OmitEmpty: true, Item: model.ItemDescription},
+	},
+}
+
 // AssignmentModel is "this person has this role", as the assignments screen
 // shows and saves it. Not a table: assignments live in webtyp/rbac.
 var AssignmentModel = model.Definition{
 	Name: "access_assignment",
 	Fields: model.Fields{
 		{Name: "id", Type: model.Text(), DB: &model.FieldDB{PK: true}},
-		{Name: "email", Type: input.Email(), Label: "E-mail", NotNull: true, Item: model.ItemLabel},
+		{Name: "user_id", Type: input.Select(), Label: "Person", OmitEmpty: true, Options: &PersonModel},
+		{Name: "email", Type: input.Email(), Label: "Invite by e-mail", Help: "Only for someone who has never signed in. Leave it empty when you pick a person.", OmitEmpty: true},
 		{Name: "role_code", Type: input.Select(), Label: "Role", NotNull: true, Item: model.ItemDescription, Options: &RoleRecordModel},
-		{Name: "user_id", Type: model.Text(), OmitEmpty: true},
-		{Name: "name", Type: model.Text(), OmitEmpty: true},
+		{Name: "name", Type: model.Text(), OmitEmpty: true, Item: model.ItemLabel},
 	},
 }

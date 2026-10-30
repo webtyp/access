@@ -11,7 +11,7 @@ func TestAudit_RecordsActorEmail(t *testing.T) {
 	adm, _ := authMod.CreateUser("adm@x.cl", "Admin", "")
 
 	m.SaveRole(adm.Id, access.RoleRecord{Code: "recep", Name: "Recepción"})
-	m.Assign(adm.Id, "luz@x.cl", "recep")
+	m.AssignByEmail(adm.Id, "luz@x.cl", "recep")
 
 	audit, err := m.ListAudit()
 	if err != nil {

@@ -28,7 +28,7 @@ _ = accessMod.EnsureRole("admin", "Admin", "", []string{"boss@my-app.com"})
 // Register its operations next to your app's
 accessMod.MountOperations(operationRegistry)
 
-// Mount the UI modules on the browser navigation rail
+// Mount the UI modules on the browser navigation rail (the menu shows one "Users and roles" entry)
 screens := ui.Screens(caller)
 ```
 
@@ -37,6 +37,8 @@ screens := ui.Screens(caller)
 | I want to... | Use... |
 |---|---|
 | create the first admins | `m.EnsureRole("admin", "Admin", "", adminEmails)` |
+| make sure the first admin (picked by id) holds a role | `m.EnsureRoleFor(...)` |
+| give a role to someone without e-mail | pick them in People/Assignments, or `m.AssignUser` |
 | let an admin manage roles | mount `m.MountOperations` and grant `access.Resources()` to the admin role |
 | mount the admin screens | `screens := ui.Screens(caller)` in your UI menu registry |
 | record an app action | `m.Record(actorUserID, action, target, detail)` |
@@ -48,8 +50,9 @@ screens := ui.Screens(caller)
 | `access.list_roles` | `access_role` | `read` | (None) |
 | `access.save_roles` | `access_role` | `create\|update` | `{"records":[...]}` |
 | `access.delete_roles` | `access_role` | `delete` | `{"ids":[...]}` |
+| `access.list_people` | `access_assignment` | `read` | (None) |
 | `access.list_assignments` | `access_assignment` | `read` | (None) |
-| `access.assign_roles` | `access_assignment` | `create` | `{"records":[...]}` |
+| `access.assign_roles` | `access_assignment` | `create` | `{"records":[{"user_id"\|"email","role_code"}]}` |
 | `access.revoke_assignments` | `access_assignment` | `delete` | `{"ids":[...]}` |
 | `access.list_audit` | `access_audit` | `read` | (None) |
 

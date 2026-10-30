@@ -7,10 +7,21 @@ import (
 )
 
 const (
+	TitlePeople      = "People"
 	TitleRoles       = "Roles"
 	TitleAssignments = "Assignments"
 	TitleAudit       = "Audit"
 )
+
+// NewPeopleView builds the Presenter for the people list (read-only): the
+// source of the person select in the assignments form.
+func NewPeopleView(caller router.Caller, opts ...view.Option) view.Presenter {
+	b := view.NewCallerLister(caller,
+		view.Ops{Module: ModelName, List: OpListPeople},
+		func() model.ModelSlice { return &PersonList{} },
+	)
+	return view.New(b, &Person{}, append([]view.Option{view.WithTitle(TitlePeople)}, opts...)...)
+}
 
 // NewRolesView builds the Presenter for the roles CRUD screen.
 func NewRolesView(caller router.Caller, opts ...view.Option) view.Presenter {

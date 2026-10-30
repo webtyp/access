@@ -7,6 +7,7 @@ import (
 
 // Operation names (qualified on the wire as "access.<op>").
 const (
+	OpListPeople        = "list_people"
 	OpListRoles         = "list_roles"
 	OpSaveRoles         = "save_roles"
 	OpDeleteRoles       = "delete_roles"
@@ -31,9 +32,10 @@ func Resources() []model.Resource {
 	return []model.Resource{ResourceRole, ResourceAssignment, ResourceAudit}
 }
 
-// MountOperations registers the seven operations. With AssuranceMultiFactor
+// MountOperations registers the eight operations. With AssuranceMultiFactor
 // every one also RequiresMFA.
 func (m *Module) MountOperations(reg router.OperationRegistry) {
+	m.gate(reg.Operation(OpListPeople, m.opListPeople).Requires(ResourceAssignment, model.Read))
 	m.gate(reg.Operation(OpListRoles, m.opListRoles).Requires(ResourceRole, model.Read))
 	m.gate(reg.Operation(OpSaveRoles, m.opSaveRoles).Requires(ResourceRole, model.Create|model.Update).Accepts(&SaveRolesArgs{}))
 	m.gate(reg.Operation(OpDeleteRoles, m.opDeleteRoles).Requires(ResourceRole, model.Delete).Accepts(&IDsArgs{}))
@@ -131,6 +133,31 @@ func (a *IDsArgs) DecodeFields(r model.FieldReader) {
 	}
 }
 
+func (m *Module) opListPeople(ctx router.Context) {
+	list, err := m.ListPeople()
+	if err != nil {
+		writeError(ctx, err)
+		return
+	}
+	var res PersonList
+	for i := range list {
+		res = append(res, &list[i])
+	}
+	ctx.Encode(&res)
+}
+
+// assignRecord: a person picked from the list (user_id) wins over the e-mail —
+// that is how a row loaded from the list is saved again; the e-mail alone invites.
+func (m *Module) assignRecord(actorUserID string, rec Assignment) (Assignment, error) {
+	if rec.UserId != "" {
+		return m.AssignUser(actorUserID, rec.UserId, rec.RoleCode)
+	}
+	if rec.Email != "" {
+		return m.AssignByEmail(actorUserID, rec.Email, rec.RoleCode)
+	}
+	return Assignment{}, ErrNoPerson
+}
+
 func (m *Module) opListRoles(ctx router.Context) {
 	list, err := m.ListRoles()
 	if err != nil {
@@ -212,7 +239,7 @@ func (m *Module) opAssignRoles(ctx router.Context) {
 	actor := ctx.UserID()
 	var last Assignment
 	for _, rec := range args.Records {
-		a, err := m.Assign(actor, rec.Email, rec.RoleCode)
+		a, err := m.assignRecord(actor, rec)
 		if err != nil {
 			writeError(ctx, err)
 			return
