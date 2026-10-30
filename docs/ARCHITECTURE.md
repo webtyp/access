@@ -19,3 +19,12 @@ flowchart TD
     access --> Roles
     access --> access_audit
 ```
+
+## People and assignments — [diagram](diagrams/ASSIGN_FLOW.md)
+
+The people list comes from `Users.ListUsers` (`authority.Module.ListUsers`).
+When assigning a role, a picked person (`user_id`) wins over the e-mail; the e-mail alone serves to invite someone who has never signed in. See the assign flow [diagram](diagrams/ASSIGN_FLOW.md).
+
+* Today (by e-mail only): ![Assign today](img/assign-today-1.png)
+* Proposal (pick from list): ![Assign proposal](img/assign-proposal-1.png)
+
