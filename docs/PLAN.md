@@ -104,3 +104,6 @@ Commit.
 |---|---|---|
 | 1 | `web/browser/main.go`, `go.mod`, `go.sum` | The demo passes its tools; explorer and diagram show its own API and tables |
 
+
+## Executor notes
+- `authMod` and `rbacSvc` are modules, but the plan instructs to only pass `accessMod` to `layout_app.LocalTools()`. Left as per the plan's code block since "Anything unclear is a question in the PR, not a guess".

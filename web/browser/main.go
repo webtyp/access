@@ -16,6 +16,7 @@ import (
 	"webtyp.com/model"
 	"webtyp.com/orm"
 	"webtyp.com/rbac"
+	"webtyp.com/router"
 	"webtyp.com/router/loopback"
 	"webtyp.com/storage/mem"
 	"webtyp.com/unixid"
@@ -35,10 +36,17 @@ func main() {
 	}
 
 	db := orm.New(mem.New())
+	steps := []ddl.Step{
+		{Name: "auth", Run: authority.Migrate},
+		{Name: "rbac", Run: rbac.Migrate},
+		{Name: access.ModelName, Run: migrate.Migrate},
+	}
 	if c, ok := db.RawConn().(ddl.Compiler); ok && c != nil {
-		_ = authority.Migrate(db.RawConn(), c)
-		_ = rbac.Migrate(db.RawConn(), c)
-		_ = migrate.Migrate(db.RawConn(), c)
+		for _, s := range steps {
+			if err := s.Run(db.RawConn(), c); err != nil {
+				panic(err)
+			}
+		}
 	}
 
 	authMod, err := authority.New(db, auth.Config{IDs: ids})
@@ -69,7 +77,12 @@ func main() {
 	// view needs one record store per page: every screen reads and saves through it.
 	caller := view.NewRecords().Caller(loopback.ActingAs("demo-project", "admin-1", accessMod))
 
-	menu, err := layout_app.BuildMenu(ui.Screens(caller), ids, func(model.Resource) bool { return true })
+	tools, err := layout_app.LocalTools([]router.OperationModule{accessMod}, steps...)
+	if err != nil {
+		panic(err)
+	}
+
+	menu, err := layout_app.BuildMenu(ui.Screens(caller), ids, func(model.Resource) bool { return true }, tools)
 	if err != nil {
 		panic(err)
 	}
