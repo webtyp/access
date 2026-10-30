@@ -2,8 +2,10 @@
 PLAN: "feat: the demo shows its API and its database (layout v0.3.99 developer tools)"
 EXECUTOR: jules
 REVIEWER: none
-STATUS: running
+STATUS: review
 SESSION: 1441580806976298907
+PR: https://github.com/webtyp/access/pull/7
+REVIEWED_COMMIT: da2cbd48b56f69ce98b900775de5bd109a71a3f2
 ---
 
 > Read AGENTS.md at the repo root before any change.
@@ -104,3 +106,6 @@ Commit.
 |---|---|---|
 | 1 | `web/browser/main.go`, `go.mod`, `go.sum` | The demo passes its tools; explorer and diagram show its own API and tables |
 
+
+## Executor notes
+- `authMod` and `rbacSvc` are modules, but the plan instructs to only pass `accessMod` to `layout_app.LocalTools()`. Left as per the plan's code block since "Anything unclear is a question in the PR, not a guess".
