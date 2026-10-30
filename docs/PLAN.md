@@ -2,8 +2,10 @@
 PLAN: "feat: give a role to a person picked from a list (people without e-mail), screens grouped under one menu entry"
 EXECUTOR: jules
 REVIEWER: none
-STATUS: running
+STATUS: review
 SESSION: 4920616419145661103
+PR: https://github.com/webtyp/access/pull/6
+REVIEWED_COMMIT: 4b8121c5723b06f50af33d5610eb49733fa83dc1
 ---
 
 > Read AGENTS.md at the repo root before any change.
