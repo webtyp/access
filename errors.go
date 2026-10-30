@@ -20,6 +20,7 @@ const (
 	ErrNoRecords    domainError = "access: no records to save"
 	ErrNoIds        domainError = "access: no ids given"
 	ErrNoEmail      domainError = "access: an e-mail is required"
+	ErrNoPerson     domainError = "access: pick a person or give an e-mail"
 	ErrNoRoleCode   domainError = "access: a role code is required"
 	ErrAssignmentID domainError = "access: assignment id must be <role_code>/<user_id>"
 	ErrUserNotFound domainError = "access: user not found"
@@ -46,7 +47,7 @@ func statusOf(err error) int {
 		switch e {
 		case ErrUserNotFound:
 			return 404
-		case ErrNoRecords, ErrNoIds, ErrNoEmail, ErrNoRoleCode, ErrAssignmentID:
+		case ErrNoRecords, ErrNoIds, ErrNoEmail, ErrNoPerson, ErrNoRoleCode, ErrAssignmentID:
 			return 400
 		}
 	}

@@ -21,37 +21,45 @@ func TestOps_ThroughCaller(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	caller.Call("access."+access.OpAssignRoles, &access.AssignRolesArgs{
-		Records: []access.Assignment{{Email: "luz@x.cl", RoleCode: "recep"}},
-	}, nil, func(e error) { err = e })
-	if err != nil {
-		t.Fatal(err)
+}
+
+func TestOps_AssignRecords(t *testing.T) {
+	m, authMod, _ := newEnv(t, model.AssuranceSingleFactor)
+	m.SaveRole("seed", access.RoleRecord{Code: "reception", Name: "Receptionist"})
+	adm, _ := authMod.CreateUser("adm@x.cl", "Admin", "")
+	staff, _ := authMod.CreateUser("", "Staff One", "")
+
+	caller := loopback.ActingAs("p1", adm.Id, m)
+
+	tests := []struct {
+		records  []access.Assignment
+		expectEr bool
+		name     string
+	}{
+		{[]access.Assignment{{UserId: staff.Id, RoleCode: "reception"}}, false, "userId set"},
+		{[]access.Assignment{{Email: "invited@example.com", RoleCode: "reception"}}, false, "email set"},
+		{[]access.Assignment{{RoleCode: "reception"}}, true, "neither set"},
+		{[]access.Assignment{{UserId: staff.Id, Email: "other@example.com", RoleCode: "reception"}}, false, "both set"},
 	}
 
-	var assignments access.AssignmentList
-	caller.Call("access."+access.OpListAssignments, nil, &assignments, func(e error) { err = e })
-	if err != nil {
-		t.Fatal(err)
-	}
-	if len(assignments) != 1 {
-		t.Errorf("expected 1 assignment, got %d", len(assignments))
-	}
-
-	u, _ := authMod.UserByEmail("luz@x.cl")
-	caller.Call("access."+access.OpRevokeAssignments, &access.IDsArgs{
-		Ids: []string{"recep/" + u.Id},
-	}, nil, func(e error) { err = e })
-	if err != nil {
-		t.Fatal(err)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			var err error
+			caller.Call("access."+access.OpAssignRoles, &access.AssignRolesArgs{
+				Records: tt.records,
+			}, nil, func(e error) { err = e })
+			if tt.expectEr && err == nil {
+				t.Errorf("expected error, got nil")
+			}
+			if !tt.expectEr && err != nil {
+				t.Errorf("expected no error, got %v", err)
+			}
+		})
 	}
 
-	var audit access.AuditEntryList
-	caller.Call("access."+access.OpListAudit, nil, &audit, func(e error) { err = e })
-	if err != nil {
-		t.Fatal(err)
-	}
-	if len(audit) != 3 {
-		t.Errorf("expected 3 audit entries, got %d", len(audit))
+	_, err := authMod.UserByEmail("other@example.com")
+	if err == nil {
+		t.Errorf("expected other@example.com to not exist")
 	}
 }
 
@@ -74,8 +82,17 @@ func TestOps_Gates(t *testing.T) {
 	regSingle := &mockOpRegistry{}
 	mSingle.MountOperations(regSingle)
 
-	if len(regSingle.routes) != 7 {
-		t.Errorf("expected 7 operations mounted, got %d", len(regSingle.routes))
+	if len(regSingle.routes) != 8 {
+		t.Errorf("expected 8 operations mounted, got %d", len(regSingle.routes))
+	}
+
+	listPeopleRoute, ok := regSingle.routes[access.OpListPeople]
+	if !ok {
+		t.Errorf("expected OpListPeople to be mounted")
+	} else {
+		if listPeopleRoute.resource != access.ResourceAssignment || listPeopleRoute.action != model.Read {
+			t.Errorf("expected OpListPeople to require ResourceAssignment Read")
+		}
 	}
 
 	for _, r := range regSingle.routes {

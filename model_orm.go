@@ -178,11 +178,86 @@ func ReadAllRoleRecord(qb *orm.QB) (RoleRecordList, error) {
 	return results, err
 }
 
+type Person struct {
+	Id string
+	Name string
+	Email string
+	Roles string
+}
+
+func (m *Person) ModelName() string { return "access_person" }
+
+func (m *Person) Schema() []model.Field { return PersonModel.Fields }
+
+func (m *Person) Pointers() []any { return []any{&m.Id, &m.Name, &m.Email, &m.Roles} }
+
+func (m *Person) IsNil() bool { return m == nil }
+
+func (m *Person) EncodeFields(w model.FieldWriter) {
+	w.String("id", m.Id)
+	w.String("name", m.Name)
+	if m.Email != "" { w.String("email", m.Email) }
+	if m.Roles != "" { w.String("roles", m.Roles) }
+}
+
+func (m *Person) DecodeFields(r model.FieldReader) {
+	if v, ok := r.String("id"); ok { m.Id = v }
+	if v, ok := r.String("name"); ok { m.Name = v }
+	if v, ok := r.String("email"); ok { m.Email = v }
+	if v, ok := r.String("roles"); ok { m.Roles = v }
+}
+
+type PersonList []*Person
+
+func (s *PersonList) Len() int             { return len(*s) }
+func (s *PersonList) At(i int) model.Fielder { return (*s)[i] }
+func (s *PersonList) Append() model.Fielder  { v := &Person{}; *s = append(*s, v); return v }
+func (s *PersonList) IsNil() bool          { return s == nil }
+func (s *PersonList) EncodeFields(_ model.FieldWriter) {}
+func (s *PersonList) DecodeFields(_ model.FieldReader) {}
+
+func (m *Person) Validate(action byte) error {
+	return model.ValidateFields(action, m)
+}
+
+func (m *Person) Item() model.Item {
+	return model.Item{ID: m.Id, Label: m.Name, Description: model.JoinItem(m.Email, m.Roles)}
+}
+
+var Person_ = struct {
+	Id string
+	Name string
+	Email string
+	Roles string
+}{
+	Id: "id",
+	Name: "name",
+	Email: "email",
+	Roles: "roles",
+}
+
+func ReadOnePerson(qb *orm.QB, model *Person) (*Person, error) {
+	err := qb.ReadOne()
+	if err != nil {
+		return nil, err
+	}
+	return model, nil
+}
+
+func ReadAllPerson(qb *orm.QB) (PersonList, error) {
+	var results PersonList
+	err := qb.ReadAll(
+		func() model.Model { return &Person{} },
+		func(m model.Model) { results = append(results, m.(*Person)) },
+	)
+	return results, err
+}
+
 type Assignment struct {
 	Id string
+	UserId string
 	Email string
 	RoleCode string
-	UserId string
 	Name string
 }
 
@@ -190,23 +265,23 @@ func (m *Assignment) ModelName() string { return "access_assignment" }
 
 func (m *Assignment) Schema() []model.Field { return AssignmentModel.Fields }
 
-func (m *Assignment) Pointers() []any { return []any{&m.Id, &m.Email, &m.RoleCode, &m.UserId, &m.Name} }
+func (m *Assignment) Pointers() []any { return []any{&m.Id, &m.UserId, &m.Email, &m.RoleCode, &m.Name} }
 
 func (m *Assignment) IsNil() bool { return m == nil }
 
 func (m *Assignment) EncodeFields(w model.FieldWriter) {
 	w.String("id", m.Id)
-	w.String("email", m.Email)
-	w.String("role_code", m.RoleCode)
 	if m.UserId != "" { w.String("user_id", m.UserId) }
+	if m.Email != "" { w.String("email", m.Email) }
+	w.String("role_code", m.RoleCode)
 	if m.Name != "" { w.String("name", m.Name) }
 }
 
 func (m *Assignment) DecodeFields(r model.FieldReader) {
 	if v, ok := r.String("id"); ok { m.Id = v }
+	if v, ok := r.String("user_id"); ok { m.UserId = v }
 	if v, ok := r.String("email"); ok { m.Email = v }
 	if v, ok := r.String("role_code"); ok { m.RoleCode = v }
-	if v, ok := r.String("user_id"); ok { m.UserId = v }
 	if v, ok := r.String("name"); ok { m.Name = v }
 }
 
@@ -224,20 +299,20 @@ func (m *Assignment) Validate(action byte) error {
 }
 
 func (m *Assignment) Item() model.Item {
-	return model.Item{ID: m.Id, Label: m.Email, Description: m.RoleCode}
+	return model.Item{ID: m.Id, Label: m.Name, Description: m.RoleCode}
 }
 
 var Assignment_ = struct {
 	Id string
+	UserId string
 	Email string
 	RoleCode string
-	UserId string
 	Name string
 }{
 	Id: "id",
+	UserId: "user_id",
 	Email: "email",
 	RoleCode: "role_code",
-	UserId: "user_id",
 	Name: "name",
 }
 

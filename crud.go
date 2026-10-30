@@ -1,6 +1,7 @@
 package access
 
 import (
+	"webtyp.com/auth"
 	"webtyp.com/fmt"
 	"webtyp.com/model"
 	"webtyp.com/rbac"
@@ -41,9 +42,26 @@ func (m *Module) DeleteRole(actorUserID, code string) error {
 	return m.Record(actorUserID, AuditRoleDelete, code, "")
 }
 
-// Assign gives roleCode to the person with that e-mail, creating the user if
-// there is none (so access can be granted before the person's first login).
-func (m *Module) Assign(actorUserID, email, roleCode string) (Assignment, error) {
+// AssignUser gives roleCode to an existing user, picked from ListPeople.
+// Example: a, err := m.AssignUser(actorID, person.Id, "reception")
+func (m *Module) AssignUser(actorUserID, userID, roleCode string) (Assignment, error) {
+	if userID == "" {
+		return Assignment{}, ErrNoPerson
+	}
+	if roleCode == "" {
+		return Assignment{}, ErrNoRoleCode
+	}
+	u, err := m.users.UserByID(userID)
+	if err != nil {
+		return Assignment{}, ErrUserNotFound
+	}
+	return m.assign(actorUserID, u, roleCode)
+}
+
+// AssignByEmail gives roleCode to the person with that e-mail, creating the
+// user when there is none: an invitation, before their first sign-in.
+// Example: a, err := m.AssignByEmail(actorID, "ana@example.com", "reception")
+func (m *Module) AssignByEmail(actorUserID, email, roleCode string) (Assignment, error) {
 	email = normalizeEmail(email)
 	if email == "" {
 		return Assignment{}, ErrNoEmail
@@ -55,13 +73,25 @@ func (m *Module) Assign(actorUserID, email, roleCode string) (Assignment, error)
 	if err != nil {
 		return Assignment{}, err
 	}
+	return m.assign(actorUserID, u, roleCode)
+}
+
+func (m *Module) assign(actorUserID string, u auth.User, roleCode string) (Assignment, error) {
 	if err := m.roles.AssignRoleByCode(m.project, u.Id, model.RoleCode(roleCode)); err != nil {
 		return Assignment{}, err
 	}
-	if err := m.Record(actorUserID, AuditAssign, roleCode, email); err != nil {
+	if err := m.Record(actorUserID, AuditAssign, roleCode, auditTarget(u)); err != nil {
 		return Assignment{}, err
 	}
 	return Assignment{Id: roleCode + AssignmentIDSeparator + u.Id, Email: u.Email, RoleCode: roleCode, UserId: u.Id, Name: u.Name}, nil
+}
+
+// auditTarget names a person in the audit: the e-mail, or the name when there is none.
+func auditTarget(u auth.User) string {
+	if u.Email != "" {
+		return u.Email
+	}
+	return u.Name
 }
 
 // Revoke removes an assignment by its id "<role_code>/<user_id>".
@@ -77,5 +107,5 @@ func (m *Module) Revoke(actorUserID, assignmentID string) error {
 	if err := m.roles.RevokeRoleByCode(m.project, u.Id, model.RoleCode(parts[0])); err != nil {
 		return err
 	}
-	return m.Record(actorUserID, AuditRevoke, parts[0], u.Email)
+	return m.Record(actorUserID, AuditRevoke, parts[0], auditTarget(u))
 }

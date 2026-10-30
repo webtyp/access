@@ -15,6 +15,8 @@ type Users interface {
 	UserByID(id string) (auth.User, error)
 	UserByEmail(email string) (auth.User, error)
 	CreateUser(email, name, phone string) (auth.User, error)
+	// ListUsers returns every user of the app, for the people list.
+	ListUsers() ([]auth.User, error)
 }
 
 // Roles is what access needs from the role store. *rbac.Service implements it.
@@ -89,16 +91,8 @@ func (m *Module) ModelName() string { return ModelName }
 //
 // Example: err := m.EnsureRole("admin", "Administrator", "Runs the clinic", []string{"ana@clinica.cl"})
 func (m *Module) EnsureRole(code model.RoleCode, name, description string, emails []string) error {
-	if code == "" {
-		return ErrNoRoleCode
-	}
-	if _, err := m.roles.GetRoleByCode(m.project, code); err != nil {
-		if !rbac.IsRoleNotFound(err) {
-			return err
-		}
-		if err := m.roles.CreateRole(m.project, m.ids.NewID(), code, name, description); err != nil {
-			return err
-		}
+	if err := m.ensureRole(code, name, description); err != nil {
+		return err
 	}
 	for _, raw := range emails {
 		email := normalizeEmail(raw)
@@ -110,6 +104,43 @@ func (m *Module) EnsureRole(code model.RoleCode, name, description string, email
 			return err
 		}
 		if err := m.roles.AssignRoleByCode(m.project, u.Id, code); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (m *Module) ensureRole(code model.RoleCode, name, description string) error {
+	if code == "" {
+		return ErrNoRoleCode
+	}
+	if _, err := m.roles.GetRoleByCode(m.project, code); err != nil {
+		if !rbac.IsRoleNotFound(err) {
+			return err
+		}
+		if err := m.roles.CreateRole(m.project, m.ids.NewID(), code, name, description); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// EnsureRoleFor makes sure the role exists and every user in userIDs holds it:
+// EnsureRole for people picked by id (people without e-mail). Idempotent.
+//
+// Example: err := m.EnsureRoleFor("admin", "Administrator", "", []string{firstAdmin.Id})
+func (m *Module) EnsureRoleFor(code model.RoleCode, name, description string, userIDs []string) error {
+	if err := m.ensureRole(code, name, description); err != nil {
+		return err
+	}
+	for _, id := range userIDs {
+		if id == "" {
+			return ErrNoPerson
+		}
+		if _, err := m.users.UserByID(id); err != nil {
+			return ErrUserNotFound
+		}
+		if err := m.roles.AssignRoleByCode(m.project, id, code); err != nil {
 			return err
 		}
 	}

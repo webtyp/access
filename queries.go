@@ -4,6 +4,54 @@ import (
 	"webtyp.com/model"
 )
 
+// roleNameSeparator joins the names of the roles a person holds.
+const roleNameSeparator = ", "
+
+// ListPeople returns every user of the app with the names of the roles they
+// hold in this project: the list a role is given from.
+// Example: people, err := m.ListPeople()
+func (m *Module) ListPeople() ([]Person, error) {
+	users, err := m.users.ListUsers()
+	if err != nil {
+		return nil, err
+	}
+	roles, err := m.ListRoles()
+	if err != nil {
+		return nil, err
+	}
+	assigned, err := m.ListAssignments()
+	if err != nil {
+		return nil, err
+	}
+	out := make([]Person, 0, len(users))
+	for _, u := range users {
+		p := Person{Id: u.Id, Name: u.Name, Email: u.Email}
+		for _, a := range assigned {
+			if a.UserId == u.Id {
+				p.Roles = joinRoleName(p.Roles, roleName(roles, a.RoleCode))
+			}
+		}
+		out = append(out, p)
+	}
+	return out, nil
+}
+
+func roleName(roles []RoleRecord, code string) string {
+	for _, r := range roles {
+		if r.Code == code {
+			return r.Name
+		}
+	}
+	return code
+}
+
+func joinRoleName(list, name string) string {
+	if list == "" {
+		return name
+	}
+	return list + roleNameSeparator + name
+}
+
 // ListRoles returns every role of the project with how many users hold it.
 func (m *Module) ListRoles() ([]RoleRecord, error) {
 	roles, err := m.roles.ListRoles(m.project)

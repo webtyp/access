@@ -32,7 +32,7 @@ func Load(m *access.Module) error {
 		return err
 	}
 
-	if _, err := m.Assign(actorID, "admin@example.com", "admin"); err != nil {
+	if _, err := m.AssignByEmail(actorID, "admin@example.com", "admin"); err != nil {
 		return err
 	}
 

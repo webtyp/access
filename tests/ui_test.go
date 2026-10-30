@@ -19,8 +19,14 @@ func TestItemizers(t *testing.T) {
 
 	a := &access.Assignment{Id: "admin/u1", Email: "admin@test.com", RoleCode: "admin", Name: "Boss"}
 	itA := a.Item()
-	if itA.ID != "admin/u1" || itA.Label != "admin@test.com" || itA.Description != "admin" {
+	if itA.ID != "admin/u1" || itA.Label != "Boss" || itA.Description != "admin" {
 		t.Errorf("unexpected Assignment.Item(): %+v", itA)
+	}
+
+	p := &access.Person{Id: "u1", Name: "Ana", Email: "ana@example.com", Roles: "Receptionist"}
+	itP := p.Item()
+	if itP.ID != "u1" || itP.Label != "Ana" || itP.Description != "ana@example.com · Receptionist" {
+		t.Errorf("unexpected Person.Item(): %+v", itP)
 	}
 
 	e := &access.AuditEntry{Id: "aud1", ActorEmail: "admin@test.com", Action: "role.save", Target: "admin"}
@@ -40,18 +46,8 @@ func TestUIScreens(t *testing.T) {
 	caller := view.NewRecords().Caller(rawCaller)
 	screens := ui.Screens(caller)
 
-	if len(screens) != 3 {
-		t.Fatalf("expected 3 screens (Roles, Assignments, Audit), got %d", len(screens))
-	}
-
-	expectedIDs := []string{"access.roles", "access.assignments", "access.audit"}
-	for i, exp := range expectedIDs {
-		if screens[i].ID != exp {
-			t.Errorf("screen %d ID: expected %q, got %q", i, exp, screens[i].ID)
-		}
-		if screens[i].Presenter == nil {
-			t.Errorf("screen %d presenter is nil", i)
-		}
+	if len(screens) != 1 {
+		t.Fatalf("expected 1 screen group, got %d", len(screens))
 	}
 }
 

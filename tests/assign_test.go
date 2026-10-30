@@ -11,7 +11,7 @@ func TestAssign_CreatesUserAndLists(t *testing.T) {
 	m, authMod, _ := newEnv(t, model.AssuranceSingleFactor)
 	m.SaveRole("", access.RoleRecord{Code: "recep", Name: "Recepción"})
 
-	a, err := m.Assign("", "luz@x.cl", "recep")
+	a, err := m.AssignByEmail("", "luz@x.cl", "recep")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -37,7 +37,7 @@ func TestAssign_CreatesUserAndLists(t *testing.T) {
 func TestAssign_UnknownRole(t *testing.T) {
 	m, _, _ := newEnv(t, model.AssuranceSingleFactor)
 
-	_, err := m.Assign("", "luz@x.cl", "nope")
+	_, err := m.AssignByEmail("", "luz@x.cl", "nope")
 	if !rbac.IsRoleNotFound(err) {
 		t.Errorf("expected IsRoleNotFound, got %v", err)
 	}
@@ -46,7 +46,7 @@ func TestAssign_UnknownRole(t *testing.T) {
 func TestRevoke(t *testing.T) {
 	m, _, _ := newEnv(t, model.AssuranceSingleFactor)
 	m.SaveRole("", access.RoleRecord{Code: "recep", Name: "Recepción"})
-	a, _ := m.Assign("", "luz@x.cl", "recep")
+	a, _ := m.AssignByEmail("", "luz@x.cl", "recep")
 
 	err := m.Revoke("", a.Id)
 	if err != nil {
