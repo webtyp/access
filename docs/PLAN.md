@@ -2,8 +2,10 @@
 PLAN: "feat: the demo shows its API and its database (layout v0.3.99 developer tools)"
 EXECUTOR: jules
 REVIEWER: none
-STATUS: running
+STATUS: review
 SESSION: 1441580806976298907
+PR: https://github.com/webtyp/access/pull/7
+REVIEWED_COMMIT: da2cbd48b56f69ce98b900775de5bd109a71a3f2
 ---
 
 > Read AGENTS.md at the repo root before any change.
