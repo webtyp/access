@@ -46,5 +46,5 @@ require (
 	webtyp.com/rpc v0.2.13 // indirect
 	webtyp.com/user v0.3.14 // indirect
 	webtyp.com/webauthn v0.1.16 // indirect
-	webtyp.com/widget v0.6.45 // indirect
+	webtyp.com/widget v0.6.46 // indirect
 )
