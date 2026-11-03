@@ -4,7 +4,7 @@ go 1.26.8
 
 require (
 	webtyp.com/auth v0.0.96
-	webtyp.com/ddl v0.0.36
+	webtyp.com/ddl v0.0.39
 	webtyp.com/dom v0.13.29
 	webtyp.com/fmt v1.0.0
 	webtyp.com/input v0.0.28
@@ -15,7 +15,7 @@ require (
 	webtyp.com/orm v0.12.20
 	webtyp.com/rbac v0.0.25
 	webtyp.com/router v0.4.17
-	webtyp.com/storage v0.1.8
+	webtyp.com/storage v0.1.18
 	webtyp.com/svg v0.3.33
 	webtyp.com/time v0.6.2
 	webtyp.com/unixid v0.3.1
