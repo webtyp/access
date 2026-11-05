@@ -135,6 +135,18 @@ type entry struct {
 	policy model.PolicyDescriber
 }
 
+type lazyTrustedStore struct {
+	d appkit.Deps
+}
+
+func (l lazyTrustedStore) IsTrustedIP(userID, ip string) bool {
+	s, err := appkit.Find[auth.TrustedIPStore](l.d)
+	if err != nil {
+		return false
+	}
+	return s.IsTrustedIP(userID, ip)
+}
+
 func (e *entry) ModelName() string                  { return "access_entry" }
 func (e *entry) Authn() router.Middleware            { return e.authn }
 func (e *entry) Authorize() model.Authorizer         { return e.authz }
@@ -161,10 +173,7 @@ func build(d appkit.Deps) (model.ModuleNaming, error) {
 		return nil, err
 	}
 
-	trustedStore, err := appkit.Find[auth.TrustedIPStore](d)
-	if err != nil {
-		return nil, err
-	}
+	trustedStore := lazyTrustedStore{d: d}
 
 	loginLimiter := auth.NewIPLimiter(maxLoginAttempts, loginWindow, loginBlock)
 	id.users.Enable(trustedip.New(id.users, trustedStore, id.users, id.users, false,
