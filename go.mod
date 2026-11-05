@@ -66,5 +66,3 @@ require (
 	webtyp.com/webauthn v0.1.16 // indirect
 	webtyp.com/widget v0.6.46 // indirect
 )
-
-replace webtyp.com/appkit => ../appkit
