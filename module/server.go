@@ -148,18 +148,21 @@ func (l lazyTrustedStore) IsTrustedIP(userID, ip string) bool {
 	return s.IsTrustedIP(userID, ip)
 }
 
-func (e *entry) ModelName() string                  { return "access_entry" }
-func (e *entry) Authn() router.Middleware            { return e.authn }
-func (e *entry) Authorize() model.Authorizer         { return e.authz }
-func (e *entry) Policy() model.PolicyDescriber       { return e.policy }
-func (e *entry) Parts() []model.ModuleNaming         { return []model.ModuleNaming{e.users, e.access} }
+func (e *entry) ModelName() string             { return "access_entry" }
+func (e *entry) Authn() router.Middleware      { return e.authn }
+func (e *entry) Authorize() model.Authorizer   { return e.authz }
+func (e *entry) Policy() model.PolicyDescriber { return e.policy }
+func (e *entry) Parts() []model.ModuleNaming   { return []model.ModuleNaming{e.users, e.access} }
 
 var server = appkit.ModuleServer{Build: func(d appkit.Deps) (model.ModuleNaming, error) { return build(d) }}
 
 var browser appkit.ModuleBrowser
 
 func build(d appkit.Deps) (model.ModuleNaming, error) {
-	logger := func(...any) {}
+	logger := d.Log
+	if logger == nil { // a Deps built by hand (tests) carries no log
+		logger = func(...any) {}
+	}
 	if bus, ok := d.Events.(eventBus); ok {
 		logSecurityEvent := securityEventLogger(logger)
 		bus.Subscribe(auth.TopicSecurity, func(e events.Event) {
