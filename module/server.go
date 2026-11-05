@@ -67,6 +67,10 @@ func seedFirstAdmin(d appkit.Deps, authMod *authority.Module, rbacSvc *rbac.Serv
 		}
 	case !errors.Is(err, appkit.ErrNoProvider):
 		return err
+	default:
+		if d.Log != nil {
+			d.Log("seedFirstAdmin Find[FirstAdminRegistrar] ErrNoProvider:", err)
+		}
 	}
 	if err := accessMod.EnsureRoleFor(RoleAdmin, "Admin", "System administrator", []string{user.Id}); err != nil {
 		return err
@@ -136,11 +140,12 @@ type entry struct {
 }
 
 type lazyTrustedStore struct {
-	d appkit.Deps
+	d     appkit.Deps
+	users *authority.Module
 }
 
 func (l lazyTrustedStore) IsTrustedIP(userID, ip string) bool {
-	s, err := appkit.Find[auth.TrustedIPStore](l.d)
+	s, err := appkit.FindExcept[auth.TrustedIPStore](l.d, l.users)
 	if err != nil {
 		return false
 	}
@@ -158,7 +163,10 @@ var server = appkit.ModuleServer{Build: func(d appkit.Deps) (model.ModuleNaming,
 var browser appkit.ModuleBrowser
 
 func build(d appkit.Deps) (model.ModuleNaming, error) {
-	logger := func(...any) {}
+	logger := d.Log
+	if logger == nil {
+		logger = func(...any) {}
+	}
 	if bus, ok := d.Events.(eventBus); ok {
 		logSecurityEvent := securityEventLogger(logger)
 		bus.Subscribe(auth.TopicSecurity, func(e events.Event) {
@@ -173,7 +181,7 @@ func build(d appkit.Deps) (model.ModuleNaming, error) {
 		return nil, err
 	}
 
-	trustedStore := lazyTrustedStore{d: d}
+	trustedStore := lazyTrustedStore{d: d, users: id.users}
 
 	loginLimiter := auth.NewIPLimiter(maxLoginAttempts, loginWindow, loginBlock)
 	id.users.Enable(trustedip.New(id.users, trustedStore, id.users, id.users, false,
