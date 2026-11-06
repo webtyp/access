@@ -43,6 +43,7 @@ func TestModuleBuild(t *testing.T) {
 	app := appkit.App{
 		TenantID: "test",
 		Timezone: "America/Santiago",
+		Log:      func(...any) {},
 		Modules:  []appkit.Module{trustedMod, module.Module},
 	}
 
