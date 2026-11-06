@@ -3,7 +3,7 @@ module webtyp.com/access
 go 1.26.8
 
 require (
-	webtyp.com/appkit v0.2.13
+	webtyp.com/appkit v0.2.16
 	webtyp.com/auth v0.0.102
 	webtyp.com/ddl v0.0.46
 	webtyp.com/dom v0.13.29
@@ -33,13 +33,13 @@ require (
 	github.com/go-jose/go-jose/v4 v4.1.4 // indirect
 	github.com/miekg/dns v1.1.72 // indirect
 	github.com/smallstep/truststore v0.13.0 // indirect
-	golang.org/x/crypto v0.53.0 // indirect
-	golang.org/x/mod v0.36.0 // indirect
-	golang.org/x/net v0.55.0 // indirect
-	golang.org/x/sync v0.21.0 // indirect
+	golang.org/x/crypto v0.54.0 // indirect
+	golang.org/x/mod v0.38.0 // indirect
+	golang.org/x/net v0.57.0 // indirect
+	golang.org/x/sync v0.22.0 // indirect
 	golang.org/x/sys v0.47.0 // indirect
-	golang.org/x/text v0.38.0 // indirect
-	golang.org/x/tools v0.45.0 // indirect
+	golang.org/x/text v0.40.0 // indirect
+	golang.org/x/tools v0.48.0 // indirect
 	howett.net/plist v1.0.0 // indirect
 	webtyp.com/await v0.1.2 // indirect
 	webtyp.com/base64 v0.0.6 // indirect
