@@ -4,7 +4,7 @@ go 1.26.8
 
 require (
 	webtyp.com/appkit v0.2.18
-	webtyp.com/auth v0.0.102
+	webtyp.com/auth v0.0.109
 	webtyp.com/ddl v0.0.46
 	webtyp.com/dom v0.13.29
 	webtyp.com/env v0.1.3
