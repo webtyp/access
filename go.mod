@@ -15,7 +15,7 @@ require (
 	webtyp.com/input v0.0.36
 	webtyp.com/json v0.5.37
 	webtyp.com/lang v0.1.13
-	webtyp.com/layout v0.3.99
+	webtyp.com/layout v0.3.108
 	webtyp.com/model v0.2.13
 	webtyp.com/orm v0.12.26
 	webtyp.com/rbac v0.0.29
@@ -24,7 +24,7 @@ require (
 	webtyp.com/svg v0.3.33
 	webtyp.com/time v0.6.4
 	webtyp.com/unixid v0.3.1
-	webtyp.com/view v0.6.53
+	webtyp.com/view v0.6.65
 )
 
 require (
