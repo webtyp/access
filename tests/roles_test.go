@@ -26,7 +26,7 @@ func TestSaveRole_CreateThenUpdate(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	roles, err := m.ListRoles()
+	roles, err := m.ListRoles("", "", 500)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -53,7 +53,7 @@ func TestDeleteRole(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	roles, _ := m.ListRoles()
+	roles, _ := m.ListRoles("", "", 500)
 	if len(roles) != 0 {
 		t.Errorf("expected 0 roles, got %d", len(roles))
 	}

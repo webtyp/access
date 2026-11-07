@@ -2,8 +2,10 @@
 PLAN: "feat!: paged lists searched on the server (view v0.6.64)"
 EXECUTOR: jules
 REVIEWER: none
-STATUS: running
+STATUS: review
 SESSION: 13005065405632253111
+PR: https://github.com/webtyp/access/pull/8
+REVIEWED_COMMIT: 86021cb288659fbfbdb66d2d56266386805e570f
 ---
 
 > Read AGENTS.md at the repo root before any change.

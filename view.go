@@ -17,7 +17,7 @@ const (
 // source of the person select in the assignments form.
 func NewPeopleView(caller router.Caller, opts ...view.Option) view.Presenter {
 	b := view.NewCallerLister(caller,
-		view.Ops{Module: ModelName, List: OpListPeople},
+		view.Ops{Module: ModelName, List: OpListPeople, Page: view.Page{First: view.All}},
 		func() model.ModelSlice { return &PersonList{} },
 	)
 	return view.New(b, &Person{}, append([]view.Option{view.WithTitle(TitlePeople)}, opts...)...)
@@ -31,6 +31,7 @@ func NewRolesView(caller router.Caller, opts ...view.Option) view.Presenter {
 			List:   OpListRoles,
 			Save:   OpSaveRoles,
 			Delete: OpDeleteRoles,
+			Page:   view.Page{First: view.All},
 		},
 		func() model.ModelSlice { return &RoleRecordList{} },
 	)
@@ -45,6 +46,7 @@ func NewAssignmentsView(caller router.Caller, opts ...view.Option) view.Presente
 			List:   OpListAssignments,
 			Save:   OpAssignRoles,
 			Delete: OpRevokeAssignments,
+			Page:   view.Page{First: view.All},
 		},
 		func() model.ModelSlice { return &AssignmentList{} },
 	)
@@ -57,6 +59,7 @@ func NewAuditView(caller router.Caller, opts ...view.Option) view.Presenter {
 		view.Ops{
 			Module: ModelName,
 			List:   OpListAudit,
+			Page:   view.Page{First: 50, Size: 50, More: true},
 		},
 		func() model.ModelSlice { return &AuditEntryList{} },
 	)

@@ -34,7 +34,7 @@ func TestAssignUser_PersonWithoutEmail(t *testing.T) {
 		t.Errorf("Unexpected assignment returned: %+v", a)
 	}
 
-	assignments, _ := m.ListAssignments()
+	assignments, _ := m.ListAssignments("", "", 500)
 	found := false
 	for _, as := range assignments {
 		if as.Id == expectedId {
@@ -46,11 +46,11 @@ func TestAssignUser_PersonWithoutEmail(t *testing.T) {
 		t.Errorf("Assignment not found in list")
 	}
 
-	audit, _ := m.ListAudit()
+	audit, _ := m.ListAudit("", "", 500)
 	if len(audit) == 0 {
 		t.Fatalf("No audit entries found")
 	}
-	lastAudit := audit[0] // Newest first
+	lastAudit := audit[len(audit)-1] // Now oldest first, so newest is last
 	if lastAudit.Action != access.AuditAssign {
 		t.Errorf("Expected audit Action 'role.assign', got %q", lastAudit.Action)
 	}
@@ -109,7 +109,7 @@ func TestAssignByEmail_Invite(t *testing.T) {
 		t.Fatalf("User was not created: %v", err)
 	}
 
-	assignments, _ := m.ListAssignments()
+	assignments, _ := m.ListAssignments("", "", 500)
 	found := false
 	for _, as := range assignments {
 		if as.UserId == u.Id && as.RoleCode == "reception" {
@@ -133,7 +133,7 @@ func TestListPeople_WithRoles(t *testing.T) {
 		t.Fatalf("AssignUser: %v", err)
 	}
 
-	people, err := m.ListPeople()
+	people, err := m.ListPeople("", "", 500)
 	if err != nil {
 		t.Fatalf("ListPeople: %v", err)
 	}
@@ -178,7 +178,7 @@ func TestListPeople_UsersDown(t *testing.T) {
 		t.Fatalf("New access.Module: %v", err)
 	}
 
-	_, err = mDown.ListPeople()
+	_, err = mDown.ListPeople("", "", 500)
 	if err != errUsersDown {
 		t.Errorf("Expected errUsersDown, got %v", err)
 	}
@@ -207,7 +207,7 @@ func TestEnsureRoleFor(t *testing.T) {
 		t.Fatalf("EnsureRoleFor twice: %v", err)
 	}
 
-	roles, _ := m.ListRoles()
+	roles, _ := m.ListRoles("", "", 500)
 	count := 0
 	for _, r := range roles {
 		if r.Code == "admin" {
@@ -218,7 +218,7 @@ func TestEnsureRoleFor(t *testing.T) {
 		t.Errorf("Expected role 'admin' to exist exactly once, found %d times", count)
 	}
 
-	assignments, _ := m.ListAssignments()
+	assignments, _ := m.ListAssignments("", "", 500)
 	found := false
 	for _, as := range assignments {
 		if as.UserId == staff.Id && as.RoleCode == "admin" {
