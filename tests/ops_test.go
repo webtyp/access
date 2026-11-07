@@ -1,6 +1,7 @@
 package tests
 
 import (
+	"webtyp.com/view"
 	"testing"
 	"webtyp.com/access"
 	"webtyp.com/model"
@@ -109,5 +110,22 @@ func TestOps_Gates(t *testing.T) {
 		if !r.requiresMFA {
 			t.Errorf("expected RequiresMFA on multi factor for %s", r.name)
 		}
+	}
+}
+
+func TestOps_ListAcceptsListArgs(t *testing.T) {
+	m, authMod, _ := newEnv(t, model.AssuranceSingleFactor)
+	adm, _ := authMod.CreateUser("adm@x.cl", "Admin", "")
+
+	caller := loopback.ActingAs("p1", adm.Id, m)
+
+	var res access.PersonList
+	var err error
+	caller.Call("access."+access.OpListPeople, &view.ListArgs{Limit: 1}, &res, func(e error) { err = e })
+	if err != nil {
+		t.Fatalf("expected no error, got %v", err)
+	}
+	if len(res) != 1 {
+		t.Errorf("expected 1 row, got %d", len(res))
 	}
 }

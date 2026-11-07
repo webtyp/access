@@ -1,6 +1,7 @@
 package access
 
 import (
+	"webtyp.com/view"
 	"webtyp.com/model"
 	"webtyp.com/router"
 )
@@ -35,14 +36,14 @@ func Resources() []model.Resource {
 // MountOperations registers the eight operations. With AssuranceMultiFactor
 // every one also RequiresMFA.
 func (m *Module) MountOperations(reg router.OperationRegistry) {
-	m.gate(reg.Operation(OpListPeople, m.opListPeople).Requires(ResourceAssignment, model.Read))
-	m.gate(reg.Operation(OpListRoles, m.opListRoles).Requires(ResourceRole, model.Read))
+	m.gate(reg.Operation(OpListPeople, m.opListPeople).Requires(ResourceAssignment, model.Read).Accepts(&view.ListArgs{}))
+	m.gate(reg.Operation(OpListRoles, m.opListRoles).Requires(ResourceRole, model.Read).Accepts(&view.ListArgs{}))
 	m.gate(reg.Operation(OpSaveRoles, m.opSaveRoles).Requires(ResourceRole, model.Create|model.Update).Accepts(&SaveRolesArgs{}))
 	m.gate(reg.Operation(OpDeleteRoles, m.opDeleteRoles).Requires(ResourceRole, model.Delete).Accepts(&IDsArgs{}))
-	m.gate(reg.Operation(OpListAssignments, m.opListAssignments).Requires(ResourceAssignment, model.Read))
+	m.gate(reg.Operation(OpListAssignments, m.opListAssignments).Requires(ResourceAssignment, model.Read).Accepts(&view.ListArgs{}))
 	m.gate(reg.Operation(OpAssignRoles, m.opAssignRoles).Requires(ResourceAssignment, model.Create).Accepts(&AssignRolesArgs{}))
 	m.gate(reg.Operation(OpRevokeAssignments, m.opRevokeAssignments).Requires(ResourceAssignment, model.Delete).Accepts(&IDsArgs{}))
-	m.gate(reg.Operation(OpListAudit, m.opListAudit).Requires(ResourceAudit, model.Read))
+	m.gate(reg.Operation(OpListAudit, m.opListAudit).Requires(ResourceAudit, model.Read).Accepts(&view.ListArgs{}))
 }
 
 func (m *Module) gate(r router.Route) {
@@ -134,7 +135,12 @@ func (a *IDsArgs) DecodeFields(r model.FieldReader) {
 }
 
 func (m *Module) opListPeople(ctx router.Context) {
-	list, err := m.ListPeople()
+	var args view.ListArgs
+	if err := ctx.Decode(&args); err != nil {
+		writeError(ctx, decodeError{err})
+		return
+	}
+	list, err := m.ListPeople(args.Search, args.After, view.Cap(args.Limit))
 	if err != nil {
 		writeError(ctx, err)
 		return
@@ -159,7 +165,12 @@ func (m *Module) assignRecord(actorUserID string, rec Assignment) (Assignment, e
 }
 
 func (m *Module) opListRoles(ctx router.Context) {
-	list, err := m.ListRoles()
+	var args view.ListArgs
+	if err := ctx.Decode(&args); err != nil {
+		writeError(ctx, decodeError{err})
+		return
+	}
+	list, err := m.ListRoles(args.Search, args.After, view.Cap(args.Limit))
 	if err != nil {
 		writeError(ctx, err)
 		return
@@ -214,7 +225,12 @@ func (m *Module) opDeleteRoles(ctx router.Context) {
 }
 
 func (m *Module) opListAssignments(ctx router.Context) {
-	list, err := m.ListAssignments()
+	var args view.ListArgs
+	if err := ctx.Decode(&args); err != nil {
+		writeError(ctx, decodeError{err})
+		return
+	}
+	list, err := m.ListAssignments(args.Search, args.After, view.Cap(args.Limit))
 	if err != nil {
 		writeError(ctx, err)
 		return
@@ -270,7 +286,12 @@ func (m *Module) opRevokeAssignments(ctx router.Context) {
 }
 
 func (m *Module) opListAudit(ctx router.Context) {
-	list, err := m.ListAudit()
+	var args view.ListArgs
+	if err := ctx.Decode(&args); err != nil {
+		writeError(ctx, decodeError{err})
+		return
+	}
+	list, err := m.ListAudit(args.Search, args.After, view.Cap(args.Limit))
 	if err != nil {
 		writeError(ctx, err)
 		return

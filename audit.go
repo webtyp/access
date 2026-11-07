@@ -44,8 +44,15 @@ func (m *Module) Record(actorUserID, action, target, detail string) error {
 }
 
 // ListAudit returns the newest AuditListLimit rows, newest first.
-func (m *Module) ListAudit() ([]AuditEntry, error) {
-	qb := m.db.Query(&AuditEntry{}).OrderBy(AuditEntry_.CreatedAt).Desc().Limit(AuditListLimit)
+func (m *Module) ListAudit(search, after string, limit int64) ([]AuditEntry, error) {
+	qb := m.db.Query(&AuditEntry{})
+	if search != "" {
+		qb = qb.Where(AuditEntry_.ActorEmail).Like("%" + search + "%")
+	}
+	if after != "" {
+		qb = qb.Where(AuditEntry_.Id).Gt(after)
+	}
+	qb = qb.OrderBy(AuditEntry_.Id).Asc().Limit(int(limit))
 	ptrs, err := ReadAllAuditEntry(qb)
 	if err != nil {
 		return nil, err

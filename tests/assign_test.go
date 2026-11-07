@@ -22,7 +22,7 @@ func TestAssign_CreatesUserAndLists(t *testing.T) {
 		t.Errorf("expected id %s, got %s", expectedId, a.Id)
 	}
 
-	assignments, err := m.ListAssignments()
+	assignments, err := m.ListAssignments("", "", 500)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -53,7 +53,7 @@ func TestRevoke(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	assignments, _ := m.ListAssignments()
+	assignments, _ := m.ListAssignments("", "", 500)
 	if len(assignments) != 0 {
 		t.Errorf("expected 0 assignments, got %d", len(assignments))
 	}
