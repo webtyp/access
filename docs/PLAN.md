@@ -2,6 +2,8 @@
 PLAN: "refactor!: access on crud tables — roles, assignments and people through its own repositories over rbac and auth; entry screens as data; seed.Demo"
 EXECUTOR: jules
 REVIEWER: none
+STATUS: running
+SESSION: 16507201428675230390
 ---
 
 > Read AGENTS.md at the repo root before any change.
