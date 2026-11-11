@@ -2,8 +2,6 @@
 PLAN: "refactor!: access on crud tables — roles, assignments and people through its own repositories over rbac and auth; entry screens as data; seed.Demo"
 EXECUTOR: jules
 REVIEWER: none
-STATUS: running
-SESSION: 11218712589489020343
 ---
 
 > Read AGENTS.md at the repo root before any change.
@@ -12,6 +10,7 @@ SESSION: 11218712589489020343
 > Never run `git reset`, `git restore`, `git checkout -- <file>` or `git stash` on your own work.
 > **Publishing:** you publish only by OPENING THE PULL REQUEST (a `git push` from your sandbox does not reach GitHub). Open it after Stage 3 with whatever compiles and keep committing to it.
 > **Never ask a yes/no question about progress**; ask only when a signature in this plan is wrong, and name the symbol.
+> **Before you submit:** `git status` must be clean and `git diff --stat main` must list the stage files (definition.go, rule_*.go, call_*.go, store.go, module.go, tests, docs). A pull request that carries only go.mod, go.sum or docs/PLAN.md is a failed delivery: if that is what your submit shows, `git add -A`, commit and submit again.
 > Never edit `definition_gen.go`: a build error there means the hand-written code is wrong. Never write `go.mod`/`go.sum` lines by hand.
 
 # Plan: `access` on crud tables (D14, D15, D17, D21, D22, D29–D31, D52 of `webtyp/docs/ARCHITECTURE_MASTER_PLAN.md`)
@@ -62,89 +61,25 @@ With `Deps.Assurance == model.AssuranceMultiFactor`, the `Definition` of each en
 
 **The audit and the actor (replaces the old `Committed` hook):** `RoleRecord` and `Assignment` gain a field `actor_id` (`model.Text()`, `OmitEmpty: true`, `ServerOnly: true`). Their rules set it from `a.UserID` (`next.ActorId = a.UserID` in `Update`, `p.ActorId = a.UserID` in `Create` and `Delete`); the store receives the record in `Create(rec)`, `UpdateFields(rec, id, fields)` and `Delete(rec, id)`, performs the rbac change and, only if it succeeded, writes the audit entry through `m.auditStore` with `rec.ActorId`. If in `Delete` the store does not receive the rule's receiver (`actor_id` empty), say so in the PR and read the actor from the stored row instead; never write the audit before the change.
 
-## Stage 1 — `definition.go`
+## Rules learned from the failed sessions of this wave (read before starting)
 
-- `Allow` as above on the four definitions. `RoleRecord.user_count` and `Person.roles` `ServerOnly: true`; `AuditEntry` fields all `ServerOnly`.
-- `Assignment.Id` is the composite wire id `model.JoinKey(role_code, user_id)` (D22; replaces `AssignmentIDSeparator`, which is deleted — `grep -rn "AssignmentIDSeparator" .` → empty).
-- Add `var Definition = model.ModuleDefinition{Name: "access", Entities: []model.Definition{RoleRecordModel, AssignmentModel, PersonModel, AuditEntryModel}}` and on each model `Rules` (`AddMyBusinessRule` where the table above names a hook, `HaveNoBusinessRule` otherwise; `Person` and `AuditEntry` read: `HaveNoBusinessRule`). Delete the hand-written `ModelName` if `definitionc` writes it. Run `definitionc`: it writes `definition_gen.go` (`ModelName`, `Definition()`, `MountOperations(reg crud.Registry)`) and the `rule_<entity>_<action>.go` skeletons; keep their signatures.
+1. **Do not write, summarize or iterate on a plan.** This index and the stage files are the finished spec. Start Stage 1 now.
+2. **Read files by ranges** (`sed -n 1,80p file`, then `sed -n 81,160p file`); never one huge `cat`: its output is cut.
+3. **A field a rule uses is the one in `definition_gen.go`:** `grep -n "type <Entity> struct" -A25 definition_gen.go`. `ServerOnly` only blocks the CLIENT: a rule may set any field of its receiver and of rows it creates with `tx.Create`. A field that does not exist is a question for the PR (name it), never an invention.
+4. **No python or regex over the source:** edit file by file; `gotest` after each stage.
 
-## Stage 2 — `stores.go` (new): the three repositories
+## Stages (do them in order; commit after each)
 
-Each implements `crud.Store` (`ReadOne`, `ReadAll`, `Create`, `UpdateFields`, `Delete`, `NewID`) and **not** `crud.Transactional`.
-`ReadAll` supports only what the screens send (a read declared `AddMyBusinessRule` has a `Search` rule that answers those conditions): `crud.Query.Conditions` made of `storage.Like` on the Item label field (search) and
-`storage.Eq` on fields of the model; any other condition → `ErrUnsupportedCondition = fmt.Err("access: this list filters only by search
-or equality")`. It filters, orders by id and applies `After`/`Limit` in memory (lists are small: roles and people of one installation).
-
-| Store | `ReadOne(rec, id)` | `ReadAll` | `Create(rec)` | `UpdateFields(rec, id, fields)` | `Delete(rec, id)` |
-|---|---|---|---|---|---|
-| `roleStore` | `Roles.GetRoleByCode(project, id)` (id = code) + `RoleUserCount`; `rbac.IsRoleNotFound` → error of kind `model.ErrorNotFound` | `Roles.ListRoles` (body of today's `ListRoles`) | body of `SaveRole` for a new code (`CreateRole` with `NewID()`, then `SetRoleSessionTTL`) | allowed fields `name`, `description`, `session_ttl` (others → `crud.ErrInvalidField`): body of `SaveRole` for an existing code | `Roles.DeleteRoleByCode` |
-| `assignmentStore` | split id with `model.SplitKey(id, 2)`; present when the user holds the role (`UsersInRole`) | body of today's `ListAssignments` | `user_id` set → body of `AssignUser`; `email` set → body of `AssignByEmail` (creates the auth user when missing); sets `rec.Id = model.JoinKey(code, userID)` | not allowed → `crud.ErrInvalidField` (Allow has no Update; never reached) | `Roles.RevokeRoleByCode` |
-| `personStore` | `Users.UserByID` + its roles | body of today's `ListPeople` | — (Allow is Read only; return `crud.ErrInvalidField`) | — | — |
-
-`NewID()` returns `d.IDs.NewID()`. The audit no longer runs inside `SaveRole`/`AssignUser`/`Revoke`: each store writes it after the rbac change succeeded (see «The audit and the actor» in Stage 1), with `actor_email` from `Users.UserByID(rec.ActorId).Email`, through the audit `orm.GlobalStore`.
-
-## Stage 3 — `ops.go` goes away; the rules
-
-`MountOperations` is generated by `definitionc` (Stage 1): delete `ops.go` entirely, every `Op*` constant, `SaveRolesArgs`, `AssignRolesArgs`, `IDsArgs`, every `op*` handler and the `webtyp.com/router` / `rpc` imports (`grep -rn "reg.Operation\|router.Context\|SaveRolesArgs\|IDsArgs" --include=*.go . | grep -v _test` → empty). Keep `EnsureRole`, `EnsureRoleFor` (setup used by apps) and `Record` (used by them). The module exposes `StoreRoleRecord()`, `StoreAssignment()`, `StorePerson()` and `StoreAuditEntry()` returning the stores (`crud.Store`), one line each in `store.go`. Fill the rule skeletons: each stamps the actor and ends with `return crud.ApplyAndPublish(), nil`; `Assignment.Create` also checks that exactly one of `user_id` / `email` is set.
-
-## Stage 4 — `access.Infra` (`module/server.go`) — D14
-
-```go
-// Infra mounts the session routes of the users module (logout, me). The app lists it in AppServer.Infra.
-//
-//	Server: appkit.AppServer{Infra: []appkit.Infra{module.Infra}}
-var Infra = appkit.Infra{Name: "auth", Build: func(d appkit.Deps) (router.APIModule, error) {
-	return appkit.Find[*authority.Module](d)
-}}
-```
-`module/server.go:159`: `var browser view.ModuleBrowser`.
-
-## Stage 5 — entry screens are data (D17) — `module/browser.go`
-
-`browser` becomes `view.ModuleBrowser`; `Screens: func(d view.BrowserDeps) []view.Screen`; `Entry: func(d view.BrowserDeps) view.EntryScreens`.
-Delete `LoginScreen` and the import of `webtyp.com/layout/login`; nothing reads `d.Brand`. The return is exactly:
-
-```go
-return view.EntryScreens{
-	Login:       view.Entry{Subtitle: textEnterKey, Form: loginF.Render(), Message: loginMessage},
-	Setup:       view.Entry{Subtitle: textFirstSetup, Form: setupForm.Render(), Message: setupMessage},
-	IdleSeconds: defaultIdleMinutes * 60,
-}
-```
-with `textEnterKey lang.Text = "Enter your key to continue"` and `textFirstSetup lang.Text = "First setup: create the administrator"`.
-If `loginF` failed to build, `Login.Form` stays `nil`. `view.go`: every `view.NewCallerLister` takes `func() model.TableSlice { return &<X>List{} }`
-and its `view.Ops` has no `Allow`.
-
-## Stage 6 — the demo is `seed.Demo` (D15)
-
-New `seed/demo.go` (`//go:build wasm`), from today's `web/browser/main.go`: the same `mem` database and three migration steps run on the
-connection, the same `authority`, `rbac`, `access` modules and seed call; it returns
-`view.Demo{Label: "Access", Timezone: "America/Santiago", ActingAs: <the admin id today's main signs in as>, Modules: []crud.Module{authMod, accessMod}, Migrations: steps, Screens: func(d view.BrowserDeps) []view.Screen { return ui.Screens(d.Caller) }}`.
-Delete `web/browser/main.go` (`test ! -e web`). After `go mod tidy`: `grep -rn "webtyp.com/layout" .` → empty, `go.mod` included.
-
-## Stage 7 — tests (`tests/`, through `crud.LoopbackActingAs(nil, "admin-1", mod)`; rows in `docs/TESTS.md`)
-
-Operations are `router.Operation{Module: ModelName, Entity: "<entity>", Action: model.<Action>}` (entities `access_role`, `access_assignment`, `access_person`, `access_audit`), never a string like `access_role_c`; arguments are `crud.CreateArgs{Records}`, `crud.UpdateArgs{IDs, Fields, Record}`, `crud.DeleteArgs{IDs}`, `crud.ReadArgs{ID, Search, After, Limit, Filter}`.
-
-| Test | Setup → call → expected |
+| Stage | File |
 |---|---|
-| `TestRole_CreateReadDelete` | `access_role_c` `{code:"reception", name:"Reception"}` → read `{id:"reception"}` → delete → read → `model.ErrorNotFound` |
-| `TestRole_UpdateOnlyEditableFields` | update `["code"]` → `crud.ErrInvalidField`; update `["session_ttl"]` → stored in rbac |
-| `TestRole_BatchRejected` | create two roles in one request → `crud.ErrBatchNotAtomic` |
-| `TestAssignment_ByUserAndByEmail` | create with `user_id` → id `reception/u1`; create with an unknown email → auth user created and assigned |
-| `TestAssignment_UserAndEmailBoth` | both set → field error |
-| `TestAssignment_DeleteRevokes` | delete ids `["reception/u1"]` → `UsersInRole` no longer lists u1 |
-| `TestAudit_ActorFromCaller` | create a role as `admin-1` → `access_audit_r` newest first, `[0].actor_email` is admin-1's email |
-| `TestPerson_ReadOnly` | `access_person` create → error containing `unknown operation` |
-| `TestPeople_ResourceIsPerson` | `model.ResourceOf(&access.PersonModel)` is `access_person`, and `access_person` is the permission the people list asks (read through the loopback as a user without it → refused when an authorizer is configured) |
-| `TestDemo_Valid` (`//go:build wasm`) | `seed.Demo()` → no error, `Validate()` nil |
-
-## Stage 8 — translations and documentation
-
-`langc sync .` (zero untranslated, zero reuse warnings). `README.md` (4 mandatory sections, ≤150 lines): operations table
-(entities `access_role` read/create/update/delete, `access_assignment` read/create/delete, `access_person` read, `access_audit` read), `access.Infra` in the app example, the
-note that the people list needs `access_person`. `docs/ARCHITECTURE.md`: why roles and people have their own repositories (D21) and
-why they save one record at a time.
+| 1 — `definition.go` | [PLAN_STAGE_1_definition_go.md](PLAN_STAGE_1_definition_go.md) |
+| 2 — `stores.go` (new): the three repositories | [PLAN_STAGE_2_stores_go.md](PLAN_STAGE_2_stores_go.md) |
+| 3 — `ops.go` goes away; the rules | [PLAN_STAGE_3_ops_go_goes_away_the_rules.md](PLAN_STAGE_3_ops_go_goes_away_the_rules.md) |
+| 4 — `access.Infra` (`module/server.go`) — D14 | [PLAN_STAGE_4_access_infra.md](PLAN_STAGE_4_access_infra.md) |
+| 5 — entry screens are data (D17) — `module/browser.go` | [PLAN_STAGE_5_entry_screens_are_data.md](PLAN_STAGE_5_entry_screens_are_data.md) |
+| 6 — the demo is `seed.Demo` (D15) | [PLAN_STAGE_6_the_demo_is_seed_demo.md](PLAN_STAGE_6_the_demo_is_seed_demo.md) |
+| 7 — tests (`tests/`, through `crud.LoopbackActingAs(nil, "admin-1", mod)`; rows in `docs/TESTS.md`) | [PLAN_STAGE_7_tests.md](PLAN_STAGE_7_tests.md) |
+| 8 — translations and documentation | [PLAN_STAGE_8_translations_and_documentati.md](PLAN_STAGE_8_translations_and_documentati.md) |
 
 ## Delivery check
 
