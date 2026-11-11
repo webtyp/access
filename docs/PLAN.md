@@ -2,15 +2,13 @@
 PLAN: "refactor!: access on crud tables — roles, assignments and people through its own repositories over rbac and auth; entry screens as data; seed.Demo"
 EXECUTOR: jules
 REVIEWER: none
-STATUS: running
-SESSION: 17264441511505517129
 ---
 
 > Read AGENTS.md at the repo root before any change.
 > **Finish by yourself:** when the delivery check passes, commit, push and open the pull request. Never ask whether to
 > proceed or finalize — nobody answers, and a session that waits ends without your work. Commit after every stage.
 > Never run `git reset`, `git restore`, `git checkout -- <file>` or `git stash` on your own work.
-> **Publishing:** you publish only by OPENING THE PULL REQUEST (a `git push` from your sandbox does not reach GitHub). Open it after Stage 3 with whatever compiles and keep committing to it.
+> **Publishing:** you publish only by OPENING THE PULL REQUEST (a `git push` from your sandbox does not reach GitHub). Open it after Stage 3 with whatever compiles and keep committing to it until Stage 6.
 > **Never ask a yes/no question about progress**; ask only when a signature in this plan is wrong, and name the symbol.
 > **Before you submit:** `git status` must be clean and `git diff --stat main` must list the stage files (definition.go, rule_*.go, call_*.go, store.go, module.go, tests, docs). A pull request that carries only go.mod, go.sum or docs/PLAN.md is a failed delivery: if that is what your submit shows, `git add -A`, commit and submit again.
 > Never edit `definition_gen.go`: a build error there means the hand-written code is wrong. Never write `go.mod`/`go.sum` lines by hand.
@@ -26,10 +24,10 @@ go install webtyp.com/devflow/cmd/gotest@latest
 go install webtyp.com/lang/cmd/langc@latest
 go install webtyp.com/definitionc/cmd/definitionc@v0.1.43
 export PATH="$PATH:$(go env GOPATH)/bin"
-go get webtyp.com/model@v0.2.20 webtyp.com/crud@v0.0.14 webtyp.com/orm@v0.12.33 webtyp.com/storage@v0.2.2 webtyp.com/router@v0.4.22 webtyp.com/definitionc@v0.1.43 webtyp.com/view@v0.6.74 webtyp.com/appkit@v0.2.36
+go get webtyp.com/model@v0.2.20 webtyp.com/crud@v0.0.14 webtyp.com/orm@v0.12.33 webtyp.com/storage@v0.2.2 webtyp.com/router@v0.4.22 webtyp.com/definitionc@v0.1.43 webtyp.com/view@v0.6.74 webtyp.com/appkit@v0.2.36 webtyp.com/auth@v0.0.112
 go mod tidy
 ```
-`definitionc` is in `$(go env GOPATH)/bin`, not in the PATH of a fresh shell: put the `export PATH=…` in the SAME command. **`definitionc` rewrites `go.mod` to older versions every run: after EVERY run repeat the `go get` line and `go mod tidy`.** No `replace` in `go.mod`. If a module cannot be fetched, stop and say so in the PR; never invent a hash. **`auth` is being migrated at the same time** (its models move to `authority`): this plan does NOT import `auth.User`; it declares its own plain type (Stage 2) so it compiles before and after.
+`definitionc` is in `$(go env GOPATH)/bin`, not in the PATH of a fresh shell: put the `export PATH=…` in the SAME command. **`definitionc` rewrites `go.mod` to older versions every run: after EVERY run repeat the `go get` line and `go mod tidy`.** No `replace` in `go.mod`. If a module cannot be fetched, stop and say so in the PR; never invent a hash. **`auth` is published (v0.0.112)**: it keeps the contract (plain `auth.User`, `auth.Identity`, `auth.Session`) and this plan imports only that; never `webtyp.com/auth/authority`.
 
 Facts you need (asked before; do not ask again):
 
@@ -80,20 +78,7 @@ With `Deps.Assurance == model.AssuranceMultiFactor`, the `Definition` of each en
 | 4 — `access.Infra` (`module/server.go`) — D14 | [PLAN_STAGE_4_access_infra.md](PLAN_STAGE_4_access_infra.md) |
 | 5 — entry screens are data (D17) — `module/browser.go` | [PLAN_STAGE_5_entry_screens_are_data.md](PLAN_STAGE_5_entry_screens_are_data.md) |
 | 6 — the demo is `seed.Demo` (D15) | [PLAN_STAGE_6_the_demo_is_seed_demo.md](PLAN_STAGE_6_the_demo_is_seed_demo.md) |
-| 7 — tests (`tests/`, through `crud.LoopbackActingAs(nil, "admin-1", mod)`; rows in `docs/TESTS.md`) | [PLAN_STAGE_7_tests.md](PLAN_STAGE_7_tests.md) |
-| 8 — translations and documentation | [PLAN_STAGE_8_translations_and_documentati.md](PLAN_STAGE_8_translations_and_documentati.md) |
 
-## Delivery check
+## Delivery check (part 1 of 2)
 
-`gotest` passes; `langc sync .` clean; every grep of this plan empty. A tree that does not compile or whose tests did not run is a failed delivery.
-
-| Stage | Files |
-|---|---|
-| 1 | `definition.go`, `definition_gen.go` (generated) |
-| 2 | `stores.go`, `crud.go`, `queries.go`, `audit.go` |
-| 3 | `ops.go` (deleted), `store.go`, `rule_*.go` |
-| 4 | `module/server.go` |
-| 5 | `module/browser.go`, `view.go` |
-| 6 | `seed/demo.go`, delete `web/browser/main.go`, `go.mod` |
-| 7 | `tests/*.go`, `docs/TESTS.md` |
-| 8 | `lang.json`, `README.md`, `docs/ARCHITECTURE.md` |
+This plan is only Stages 1–6; the files `PLAN_STAGE_7_*.md` and later belong to the NEXT plan: ignore them. In this part you ALSO delete every test in `tests/` that calls a method or constant this migration removes (`go vet ./tests/` lists them) together with its row in `docs/TESTS.md`; the new tests are written in part 2. `gotest` passes on every destination (it builds, vets, races and runs every destination) — the root module must compile with no test of the removed code left. A tree that does not compile is a failed delivery. Submit as soon as it is green (git add -A; `git diff --stat main` lists the stage files).
