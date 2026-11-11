@@ -2,8 +2,6 @@
 PLAN: "refactor!: access on crud tables — roles, assignments and people through its own repositories over rbac and auth; entry screens as data; seed.Demo"
 EXECUTOR: jules
 REVIEWER: none
-STATUS: running
-SESSION: 5660495010476842570
 ---
 
 > Read AGENTS.md at the repo root before any change.
@@ -15,7 +13,7 @@ SESSION: 5660495010476842570
 > **Before you submit:** `git status` must be clean and `git diff --stat main` must list the stage files (definition.go, rule_*.go, call_*.go, store.go, module.go, tests, docs). A pull request that carries only go.mod, go.sum or docs/PLAN.md is a failed delivery: if that is what your submit shows, `git add -A`, commit and submit again.
 > Never edit `definition_gen.go`: a build error there means the hand-written code is wrong. Never write `go.mod`/`go.sum` lines by hand.
 
-# Plan: `access` on crud tables (D14, D15, D17, D21, D22, D29–D31, D52 of `webtyp/docs/ARCHITECTURE_MASTER_PLAN.md`)
+# Plan (part 1a of 3, Stages 1–3 only — submit the PR right after each stage that compiles): `access` on crud tables (D14, D15, D17, D21, D22, D29–D31, D52 of `webtyp/docs/ARCHITECTURE_MASTER_PLAN.md`)
 
 This plan was rewritten on 2026-11-10 with the vocabulary that is published today (`definitionc`, `definition.go`, `Definition`/`Rules`, rule files); an earlier text used `ormc`, `model_crud.go` and `Mount<Entity>`, which no longer exist.
 
@@ -77,10 +75,7 @@ With `Deps.Assurance == model.AssuranceMultiFactor`, the `Definition` of each en
 | 1 — `definition.go` | [PLAN_STAGE_1_definition_go.md](PLAN_STAGE_1_definition_go.md) |
 | 2 — `stores.go` (new): the three repositories | [PLAN_STAGE_2_stores_go.md](PLAN_STAGE_2_stores_go.md) |
 | 3 — `ops.go` goes away; the rules | [PLAN_STAGE_3_ops_go_goes_away_the_rules.md](PLAN_STAGE_3_ops_go_goes_away_the_rules.md) |
-| 4 — `access.Infra` (`module/server.go`) — D14 | [PLAN_STAGE_4_access_infra.md](PLAN_STAGE_4_access_infra.md) |
-| 5 — entry screens are data (D17) — `module/browser.go` | [PLAN_STAGE_5_entry_screens_are_data.md](PLAN_STAGE_5_entry_screens_are_data.md) |
-| 6 — the demo is `seed.Demo` (D15) | [PLAN_STAGE_6_the_demo_is_seed_demo.md](PLAN_STAGE_6_the_demo_is_seed_demo.md) |
 
 ## Delivery check (part 1 of 2)
 
-This plan is only Stages 1–6; the files `PLAN_STAGE_7_*.md` and later belong to the NEXT plan: ignore them. In this part you ALSO delete every test in `tests/` that calls a method or constant this migration removes (`go vet ./tests/` lists them) together with its row in `docs/TESTS.md`; the new tests are written in part 2. `gotest` passes on every destination (it builds, vets, races and runs every destination) — the root module must compile with no test of the removed code left. A tree that does not compile is a failed delivery. Submit as soon as it is green (git add -A; `git diff --stat main` lists the stage files).
+This plan is only Stages 1–3; the files `PLAN_STAGE_4_*.md` and later belong to the NEXT plan: ignore them. In this part you ALSO delete every test in `tests/` that calls a method or constant this migration removes (`go vet ./tests/` lists them) together with its row in `docs/TESTS.md`; the new tests are written in part 2. `gotest` passes on every destination (it builds, vets, races and runs every destination) — the root module must compile with no test of the removed code left. A tree that does not compile is a failed delivery. Submit as soon as it is green (git add -A; `git diff --stat main` lists the stage files).
