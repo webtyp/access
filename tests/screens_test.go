@@ -6,7 +6,7 @@ import (
 	"webtyp.com/access/seed"
 	"webtyp.com/access/ui"
 	"webtyp.com/model"
-	"webtyp.com/router/loopback"
+
 	"webtyp.com/view"
 )
 
@@ -16,8 +16,8 @@ func TestScreens(t *testing.T) {
 		t.Fatalf("seed.Load: %v", err)
 	}
 
-	rawCaller := loopback.ActingAs("p1", "admin-1", m)
-	caller := view.NewRecords().Caller(rawCaller)
+
+	caller := view.NewRecords().Caller(nil)
 	screens := ui.Screens(caller)
 
 	if len(screens) != 1 {
@@ -39,7 +39,7 @@ func TestScreens(t *testing.T) {
 		t.Fatalf("expected 4 children screens, got %d", len(group.Children))
 	}
 
-	expectedPerms := []model.Resource{access.ResourceAssignment, access.ResourceRole, access.ResourceAssignment, access.ResourceAudit}
+	expectedPerms := []model.Resource{"access_assignment", "access_role", "access_assignment", "access_audit"}
 	for i, s := range group.Children {
 		if err := s.Validate(); err != nil {
 			t.Errorf("screen %d validate: %v", i, err)

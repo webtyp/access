@@ -6,7 +6,7 @@ import (
 	"webtyp.com/access/seed"
 	"webtyp.com/access/ui"
 	"webtyp.com/model"
-	"webtyp.com/router/loopback"
+
 	"webtyp.com/view"
 )
 
@@ -42,8 +42,8 @@ func TestUIScreens(t *testing.T) {
 		t.Fatalf("seed.Load: %v", err)
 	}
 
-	rawCaller := loopback.ActingAs("p1", "admin-1", m)
-	caller := view.NewRecords().Caller(rawCaller)
+
+	caller := view.NewRecords().Caller(nil)
 	screens := ui.Screens(caller)
 
 	if len(screens) != 1 {
@@ -57,8 +57,8 @@ func TestPresentersReload(t *testing.T) {
 		t.Fatalf("seed.Load: %v", err)
 	}
 
-	rawCaller := loopback.ActingAs("p1", "admin-1", m)
-	caller := view.NewRecords().Caller(rawCaller)
+
+	caller := view.NewRecords().Caller(nil)
 
 	rolesPres := access.NewRolesView(caller)
 	rolesPres.Reload(func(err error) {

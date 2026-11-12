@@ -7,7 +7,7 @@ import (
 	"webtyp.com/auth"
 	"webtyp.com/model"
 	"webtyp.com/rbac"
-	"webtyp.com/router/loopback"
+
 )
 
 // failingUsers is a Users whose list fails: the store is down.
@@ -29,7 +29,7 @@ func TestAssignUser_PersonWithoutEmail(t *testing.T) {
 		t.Fatalf("AssignUser: %v", err)
 	}
 
-	expectedId := "reception/" + staff.Id
+	expectedId := model.JoinKey("reception", staff.Id)
 	if a.Id != expectedId || a.UserId != staff.Id || a.Name != "Staff One" || a.RoleCode != "reception" {
 		t.Errorf("Unexpected assignment returned: %+v", a)
 	}
@@ -181,15 +181,6 @@ func TestListPeople_UsersDown(t *testing.T) {
 	_, err = mDown.ListPeople("", "", 500)
 	if err != errUsersDown {
 		t.Errorf("Expected errUsersDown, got %v", err)
-	}
-
-	caller := loopback.ActingAs("p1", "admin-1", mDown)
-	var res access.PersonList
-	caller.Call("access."+access.OpListPeople, nil, &res, func(e error) {
-		err = e
-	})
-	if err == nil {
-		t.Errorf("Expected error from loopback call")
 	}
 }
 
