@@ -2,6 +2,7 @@ package tests
 
 import (
 	"testing"
+
 	"webtyp.com/access"
 	"webtyp.com/access/seed"
 	"webtyp.com/access/ui"
@@ -15,7 +16,6 @@ func TestScreens(t *testing.T) {
 	if err := seed.Load(m); err != nil {
 		t.Fatalf("seed.Load: %v", err)
 	}
-
 
 	caller := view.NewRecords().Caller(nil)
 	screens := ui.Screens(caller)

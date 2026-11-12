@@ -2,6 +2,7 @@ package tests
 
 import (
 	"testing"
+
 	"webtyp.com/access"
 	"webtyp.com/model"
 )
@@ -10,17 +11,17 @@ func TestSaveRole_CreateThenUpdate(t *testing.T) {
 	m, _, _ := newEnv(t, model.AssuranceSingleFactor)
 
 	err := m.SaveRole("", access.RoleRecord{
-		Code:        "recep",
-		Name:        "Recepción",
-		SessionTtl:  600,
+		Code:       "recep",
+		Name:       "Recepción",
+		SessionTtl: 600,
 	})
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	err = m.SaveRole("", access.RoleRecord{
-		Code:        "recep",
-		Name:        "Mesón",
+		Code: "recep",
+		Name: "Mesón",
 	})
 	if err != nil {
 		t.Fatal(err)
