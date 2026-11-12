@@ -2,6 +2,7 @@ package tests
 
 import (
 	"testing"
+
 	"webtyp.com/access"
 	"webtyp.com/access/migrate"
 	"webtyp.com/auth"
@@ -141,6 +142,6 @@ func (r *mockRoute) RequiresMFA() router.Route {
 }
 
 func (r *mockRoute) Accepts(model.Fielder) router.Route { return r }
-func (r *mockRoute) Public() router.Route { return r }
-func (r *mockRoute) Authenticated() router.Route { return r }
-func (r *mockRoute) Describe(string) router.Route { return r }
+func (r *mockRoute) Public() router.Route               { return r }
+func (r *mockRoute) Authenticated() router.Route        { return r }
+func (r *mockRoute) Describe(string) router.Route       { return r }

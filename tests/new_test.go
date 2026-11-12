@@ -2,6 +2,7 @@ package tests
 
 import (
 	"testing"
+
 	"webtyp.com/access"
 	"webtyp.com/auth/authority"
 	"webtyp.com/model"

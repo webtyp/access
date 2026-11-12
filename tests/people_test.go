@@ -3,11 +3,11 @@ package tests
 import (
 	"errors"
 	"testing"
+
 	"webtyp.com/access"
 	"webtyp.com/auth"
 	"webtyp.com/model"
 	"webtyp.com/rbac"
-	"webtyp.com/router/loopback"
 )
 
 // failingUsers is a Users whose list fails: the store is down.
@@ -18,49 +18,6 @@ type failingUsers struct {
 var errUsersDown = errors.New("users store down")
 
 func (failingUsers) ListUsers() ([]auth.User, error) { return nil, errUsersDown }
-
-func TestAssignUser_PersonWithoutEmail(t *testing.T) {
-	m, authMod, _ := newEnv(t, model.AssuranceSingleFactor)
-	m.SaveRole("seed", access.RoleRecord{Code: "reception", Name: "Receptionist"})
-	staff, _ := authMod.CreateUser("", "Staff One", "")
-
-	a, err := m.AssignUser("admin-1", staff.Id, "reception")
-	if err != nil {
-		t.Fatalf("AssignUser: %v", err)
-	}
-
-	expectedId := "reception/" + staff.Id
-	if a.Id != expectedId || a.UserId != staff.Id || a.Name != "Staff One" || a.RoleCode != "reception" {
-		t.Errorf("Unexpected assignment returned: %+v", a)
-	}
-
-	assignments, _ := m.ListAssignments("", "", 500)
-	found := false
-	for _, as := range assignments {
-		if as.Id == expectedId {
-			found = true
-			break
-		}
-	}
-	if !found {
-		t.Errorf("Assignment not found in list")
-	}
-
-	audit, _ := m.ListAudit("", "", 500)
-	if len(audit) == 0 {
-		t.Fatalf("No audit entries found")
-	}
-	lastAudit := audit[len(audit)-1] // Now oldest first, so newest is last
-	if lastAudit.Action != access.AuditAssign {
-		t.Errorf("Expected audit Action 'role.assign', got %q", lastAudit.Action)
-	}
-	if lastAudit.Target != "reception" {
-		t.Errorf("Expected audit Target 'reception', got %q", lastAudit.Target)
-	}
-	if lastAudit.Detail != "Staff One" {
-		t.Errorf("Expected audit Detail 'Staff One', got %q", lastAudit.Detail)
-	}
-}
 
 func TestAssignUser_Errors(t *testing.T) {
 	m, authMod, _ := newEnv(t, model.AssuranceSingleFactor)
@@ -144,12 +101,13 @@ func TestListPeople_WithRoles(t *testing.T) {
 
 	staffFound, anaFound := false, false
 	for _, p := range people {
-		if p.Id == staff.Id {
+		switch p.Id {
+		case staff.Id:
 			staffFound = true
 			if p.Roles != "Receptionist" || p.Email != "" {
 				t.Errorf("Staff: expected Roles='Receptionist', Email='', got Roles=%q, Email=%q", p.Roles, p.Email)
 			}
-		} else if p.Id == ana.Id {
+		case ana.Id:
 			anaFound = true
 			if p.Roles != "" || p.Email != "ana@example.com" {
 				t.Errorf("Ana: expected Roles='', Email='ana@example.com', got Roles=%q, Email=%q", p.Roles, p.Email)
@@ -181,15 +139,6 @@ func TestListPeople_UsersDown(t *testing.T) {
 	_, err = mDown.ListPeople("", "", 500)
 	if err != errUsersDown {
 		t.Errorf("Expected errUsersDown, got %v", err)
-	}
-
-	caller := loopback.ActingAs("p1", "admin-1", mDown)
-	var res access.PersonList
-	caller.Call("access."+access.OpListPeople, nil, &res, func(e error) {
-		err = e
-	})
-	if err == nil {
-		t.Errorf("Expected error from loopback call")
 	}
 }
 

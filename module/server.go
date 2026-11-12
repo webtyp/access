@@ -3,6 +3,7 @@
 package module
 
 import (
+	"webtyp.com/view"
 	"errors"
 
 	"webtyp.com/access"
@@ -156,7 +157,7 @@ func (e *entry) Parts() []model.ModuleNaming   { return []model.ModuleNaming{e.u
 
 var server = appkit.ModuleServer{Build: func(d appkit.Deps) (model.ModuleNaming, error) { return build(d) }}
 
-var browser appkit.ModuleBrowser
+var browser view.ModuleBrowser
 
 func build(d appkit.Deps) (model.ModuleNaming, error) {
 	logger := d.Log

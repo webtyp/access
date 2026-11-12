@@ -83,7 +83,7 @@ func (m *Module) assign(actorUserID string, u auth.User, roleCode string) (Assig
 	if err := m.Record(actorUserID, AuditAssign, roleCode, auditTarget(u)); err != nil {
 		return Assignment{}, err
 	}
-	return Assignment{Id: roleCode + AssignmentIDSeparator + u.Id, Email: u.Email, RoleCode: roleCode, UserId: u.Id, Name: u.Name}, nil
+	return Assignment{Id: model.JoinKey(roleCode, u.Id), Email: u.Email, RoleCode: roleCode, UserId: u.Id, Name: u.Name}, nil
 }
 
 // auditTarget names a person in the audit: the e-mail, or the name when there is none.
@@ -96,7 +96,7 @@ func auditTarget(u auth.User) string {
 
 // Revoke removes an assignment by its id "<role_code>/<user_id>".
 func (m *Module) Revoke(actorUserID, assignmentID string) error {
-	parts := fmt.Split(assignmentID, AssignmentIDSeparator)
+	parts := fmt.Split(assignmentID, "")
 	if len(parts) != 2 || parts[0] == "" || parts[1] == "" {
 		return ErrAssignmentID
 	}

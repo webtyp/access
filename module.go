@@ -80,8 +80,6 @@ func New(d Deps) (*Module, error) {
 	return &Module{db: d.DB, ids: d.IDs, users: d.Users, roles: d.Roles, project: d.ProjectID, assurance: d.Assurance}, nil
 }
 
-// ModelName is the module identity operations are qualified with.
-func (m *Module) ModelName() string { return ModelName }
 
 // EnsureRole makes sure the role exists (creating it with name and
 // description if missing) and that every e-mail in emails holds it,

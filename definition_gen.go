@@ -5,6 +5,7 @@ package access
 import (
 	"webtyp.com/model"
 	"webtyp.com/orm"
+	"webtyp.com/crud"
 	"webtyp.com/time"
 )
 
@@ -56,6 +57,9 @@ func (m *AuditEntry) Validate(action byte) error {
 	return model.ValidateFields(action, m)
 }
 
+func (*AuditEntry) Allow() model.Action     { return AuditEntryModel.Allow }
+func (*AuditEntryList) Allow() model.Action { return AuditEntryModel.Allow }
+
 func (m *AuditEntry) Item() model.Item {
 	return model.Item{ID: m.Id, Label: m.ActorEmail, Description: model.JoinItem(m.Action, m.Target)}
 }
@@ -100,13 +104,14 @@ type RoleRecord struct {
 	Description string
 	SessionTtl int64
 	UserCount int64
+	ActorId string
 }
 
 func (m *RoleRecord) ModelName() string { return "access_role" }
 
 func (m *RoleRecord) Schema() []model.Field { return RoleRecordModel.Fields }
 
-func (m *RoleRecord) Pointers() []any { return []any{&m.Id, &m.Code, &m.Name, &m.Description, &m.SessionTtl, &m.UserCount} }
+func (m *RoleRecord) Pointers() []any { return []any{&m.Id, &m.Code, &m.Name, &m.Description, &m.SessionTtl, &m.UserCount, &m.ActorId} }
 
 func (m *RoleRecord) IsNil() bool { return m == nil }
 
@@ -117,6 +122,7 @@ func (m *RoleRecord) EncodeFields(w model.FieldWriter) {
 	if m.Description != "" { w.String("description", m.Description) }
 	if m.SessionTtl != 0 { w.Int("session_ttl", m.SessionTtl) }
 	if m.UserCount != 0 { w.Int("user_count", m.UserCount) }
+	if m.ActorId != "" { w.String("actor_id", m.ActorId) }
 }
 
 func (m *RoleRecord) DecodeFields(r model.FieldReader) {
@@ -126,6 +132,7 @@ func (m *RoleRecord) DecodeFields(r model.FieldReader) {
 	if v, ok := r.String("description"); ok { m.Description = v }
 	if v, ok := r.Int("session_ttl"); ok { m.SessionTtl = v }
 	if v, ok := r.Int("user_count"); ok { m.UserCount = v }
+	if v, ok := r.String("actor_id"); ok { m.ActorId = v }
 }
 
 type RoleRecordList []*RoleRecord
@@ -141,6 +148,9 @@ func (m *RoleRecord) Validate(action byte) error {
 	return model.ValidateFields(action, m)
 }
 
+func (*RoleRecord) Allow() model.Action     { return RoleRecordModel.Allow }
+func (*RoleRecordList) Allow() model.Action { return RoleRecordModel.Allow }
+
 func (m *RoleRecord) Item() model.Item {
 	return model.Item{ID: m.Id, Label: m.Name, Description: m.Code}
 }
@@ -152,6 +162,7 @@ var RoleRecord_ = struct {
 	Description string
 	SessionTtl string
 	UserCount string
+	ActorId string
 }{
 	Id: "id",
 	Code: "code",
@@ -159,6 +170,7 @@ var RoleRecord_ = struct {
 	Description: "description",
 	SessionTtl: "session_ttl",
 	UserCount: "user_count",
+	ActorId: "actor_id",
 }
 
 func ReadOneRoleRecord(qb *orm.QB, model *RoleRecord) (*RoleRecord, error) {
@@ -220,6 +232,9 @@ func (m *Person) Validate(action byte) error {
 	return model.ValidateFields(action, m)
 }
 
+func (*Person) Allow() model.Action     { return PersonModel.Allow }
+func (*PersonList) Allow() model.Action { return PersonModel.Allow }
+
 func (m *Person) Item() model.Item {
 	return model.Item{ID: m.Id, Label: m.Name, Description: model.JoinItem(m.Email, m.Roles)}
 }
@@ -259,13 +274,14 @@ type Assignment struct {
 	Email string
 	RoleCode string
 	Name string
+	ActorId string
 }
 
 func (m *Assignment) ModelName() string { return "access_assignment" }
 
 func (m *Assignment) Schema() []model.Field { return AssignmentModel.Fields }
 
-func (m *Assignment) Pointers() []any { return []any{&m.Id, &m.UserId, &m.Email, &m.RoleCode, &m.Name} }
+func (m *Assignment) Pointers() []any { return []any{&m.Id, &m.UserId, &m.Email, &m.RoleCode, &m.Name, &m.ActorId} }
 
 func (m *Assignment) IsNil() bool { return m == nil }
 
@@ -275,6 +291,7 @@ func (m *Assignment) EncodeFields(w model.FieldWriter) {
 	if m.Email != "" { w.String("email", m.Email) }
 	w.String("role_code", m.RoleCode)
 	if m.Name != "" { w.String("name", m.Name) }
+	if m.ActorId != "" { w.String("actor_id", m.ActorId) }
 }
 
 func (m *Assignment) DecodeFields(r model.FieldReader) {
@@ -283,6 +300,7 @@ func (m *Assignment) DecodeFields(r model.FieldReader) {
 	if v, ok := r.String("email"); ok { m.Email = v }
 	if v, ok := r.String("role_code"); ok { m.RoleCode = v }
 	if v, ok := r.String("name"); ok { m.Name = v }
+	if v, ok := r.String("actor_id"); ok { m.ActorId = v }
 }
 
 type AssignmentList []*Assignment
@@ -298,6 +316,9 @@ func (m *Assignment) Validate(action byte) error {
 	return model.ValidateFields(action, m)
 }
 
+func (*Assignment) Allow() model.Action     { return AssignmentModel.Allow }
+func (*AssignmentList) Allow() model.Action { return AssignmentModel.Allow }
+
 func (m *Assignment) Item() model.Item {
 	return model.Item{ID: m.Id, Label: m.Name, Description: m.RoleCode}
 }
@@ -308,12 +329,14 @@ var Assignment_ = struct {
 	Email string
 	RoleCode string
 	Name string
+	ActorId string
 }{
 	Id: "id",
 	UserId: "user_id",
 	Email: "email",
 	RoleCode: "role_code",
 	Name: "name",
+	ActorId: "actor_id",
 }
 
 func ReadOneAssignment(qb *orm.QB, model *Assignment) (*Assignment, error) {
@@ -333,3 +356,57 @@ func ReadAllAssignment(qb *orm.QB) (AssignmentList, error) {
 	return results, err
 }
 
+// ModelName is the module identity: Definition.Name.
+const ModelName = "access"
+
+func (m *Module) ModelName() string { return ModelName }
+
+// Definition is the module's declaration (definition.go); crud.Mount compares it with what MountOperations mounted.
+func (m *Module) Definition() model.ModuleDefinition { return Definition }
+
+// MountOperations offers every entity of the module: the actions its model allows, with crud's validation and the rules written in rule_*.go.
+func (m *Module) MountOperations(reg crud.Registry) {
+	reg.AddStoredEntity(crud.StoredEntity{
+		Model: &RoleRecord{},
+		NewList: func() model.ModelSlice { return &RoleRecordList{} },
+		Store: m.StoreRoleRecord(),
+		Rules: RoleRecordModel.Rules,
+		MFA: RoleRecordModel.MFA,
+		Create: func(a crud.CurrentUser, tx crud.Tx, rec model.Model) (crud.RuleAnswer, error) {
+			return rec.(*RoleRecord).Create(a, tx, m)
+		},
+		Update: func(a crud.CurrentUser, tx crud.Tx, old, next model.Model, fields []string) (crud.RuleAnswer, error) {
+			return next.(*RoleRecord).Update(a, tx, old.(*RoleRecord), fields, m)
+		},
+		Delete: func(a crud.CurrentUser, tx crud.Tx, rec model.Model) (crud.RuleAnswer, error) {
+			return rec.(*RoleRecord).Delete(a, tx, m)
+		},
+	})
+	reg.AddStoredEntity(crud.StoredEntity{
+		Model: &Assignment{},
+		NewList: func() model.ModelSlice { return &AssignmentList{} },
+		Store: m.StoreAssignment(),
+		Rules: AssignmentModel.Rules,
+		MFA: AssignmentModel.MFA,
+		Create: func(a crud.CurrentUser, tx crud.Tx, rec model.Model) (crud.RuleAnswer, error) {
+			return rec.(*Assignment).Create(a, tx, m)
+		},
+		Delete: func(a crud.CurrentUser, tx crud.Tx, rec model.Model) (crud.RuleAnswer, error) {
+			return rec.(*Assignment).Delete(a, tx, m)
+		},
+	})
+	reg.AddStoredEntity(crud.StoredEntity{
+		Model: &Person{},
+		NewList: func() model.ModelSlice { return &PersonList{} },
+		Store: m.StorePerson(),
+		Rules: PersonModel.Rules,
+		MFA: PersonModel.MFA,
+	})
+	reg.AddStoredEntity(crud.StoredEntity{
+		Model: &AuditEntry{},
+		NewList: func() model.ModelSlice { return &AuditEntryList{} },
+		Store: m.StoreAuditEntry(),
+		Rules: AuditEntryModel.Rules,
+		MFA: AuditEntryModel.MFA,
+	})
+}

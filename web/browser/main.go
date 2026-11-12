@@ -3,6 +3,8 @@
 package main
 
 import (
+	"webtyp.com/crud"
+
 	"webtyp.com/access"
 	"webtyp.com/access/migrate"
 	"webtyp.com/access/seed"
@@ -16,8 +18,7 @@ import (
 	"webtyp.com/model"
 	"webtyp.com/orm"
 	"webtyp.com/rbac"
-	"webtyp.com/router"
-	"webtyp.com/router/loopback"
+
 	"webtyp.com/storage/mem"
 	"webtyp.com/unixid"
 	"webtyp.com/view"
@@ -75,9 +76,9 @@ func main() {
 	}
 
 	// view needs one record store per page: every screen reads and saves through it.
-	caller := view.NewRecords().Caller(loopback.ActingAs("demo-project", "admin-1", accessMod))
+	caller := view.NewRecords().Caller(nil)
 
-	tools, err := layout_app.LocalTools([]router.OperationModule{accessMod}, steps...)
+	tools, err := layout_app.LocalTools([]crud.Module{accessMod}, steps...)
 	if err != nil {
 		panic(err)
 	}

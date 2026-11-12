@@ -136,7 +136,7 @@ func (m *Module) ListAssignments(search, after string, limit int64) ([]Assignmen
 			if search != "" && !strings.Contains(strings.ToLower(u.Name), strings.ToLower(search)) {
 				continue
 			}
-			out = append(out, Assignment{Id: r.Code + AssignmentIDSeparator + u.Id, Email: u.Email, RoleCode: r.Code, UserId: u.Id, Name: u.Name})
+			out = append(out, Assignment{Id: r.Code + "" + u.Id, Email: u.Email, RoleCode: r.Code, UserId: u.Id, Name: u.Name})
 		}
 	}
 	sort.SliceStable(out, func(i, j int) bool { return out[i].Id < out[j].Id })

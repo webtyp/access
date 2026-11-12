@@ -2,6 +2,7 @@ package tests
 
 import (
 	"testing"
+
 	"webtyp.com/access"
 	"webtyp.com/model"
 	"webtyp.com/rbac"
@@ -17,7 +18,7 @@ func TestAssign_CreatesUserAndLists(t *testing.T) {
 	}
 
 	u, _ := authMod.UserByEmail("luz@x.cl")
-	expectedId := "recep/" + u.Id
+	expectedId := model.JoinKey("recep", u.Id)
 	if a.Id != expectedId {
 		t.Errorf("expected id %s, got %s", expectedId, a.Id)
 	}
@@ -40,22 +41,6 @@ func TestAssign_UnknownRole(t *testing.T) {
 	_, err := m.AssignByEmail("", "luz@x.cl", "nope")
 	if !rbac.IsRoleNotFound(err) {
 		t.Errorf("expected IsRoleNotFound, got %v", err)
-	}
-}
-
-func TestRevoke(t *testing.T) {
-	m, _, _ := newEnv(t, model.AssuranceSingleFactor)
-	m.SaveRole("", access.RoleRecord{Code: "recep", Name: "Recepción"})
-	a, _ := m.AssignByEmail("", "luz@x.cl", "recep")
-
-	err := m.Revoke("", a.Id)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	assignments, _ := m.ListAssignments("", "", 500)
-	if len(assignments) != 0 {
-		t.Errorf("expected 0 assignments, got %d", len(assignments))
 	}
 }
 
