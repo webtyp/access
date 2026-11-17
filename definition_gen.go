@@ -356,6 +356,85 @@ func ReadAllAssignment(qb *orm.QB) (AssignmentList, error) {
 	return results, err
 }
 
+type RecordLink struct {
+	Id string
+	UserId string
+	Module string
+	RecordId string
+	CreatedAt time.Nano
+}
+
+func (m *RecordLink) ModelName() string { return "access_record_link" }
+
+func (m *RecordLink) Schema() []model.Field { return RecordLinkModel.Fields }
+
+func (m *RecordLink) Pointers() []any { return []any{&m.Id, &m.UserId, &m.Module, &m.RecordId, (*int64)(&m.CreatedAt)} }
+
+func (m *RecordLink) IsNil() bool { return m == nil }
+
+func (m *RecordLink) EncodeFields(w model.FieldWriter) {
+	w.String("id", m.Id)
+	w.String("user_id", m.UserId)
+	w.String("module", m.Module)
+	w.String("record_id", m.RecordId)
+	w.Int("created_at", int64(m.CreatedAt))
+}
+
+func (m *RecordLink) DecodeFields(r model.FieldReader) {
+	if v, ok := r.String("id"); ok { m.Id = v }
+	if v, ok := r.String("user_id"); ok { m.UserId = v }
+	if v, ok := r.String("module"); ok { m.Module = v }
+	if v, ok := r.String("record_id"); ok { m.RecordId = v }
+	if v, ok := r.Int("created_at"); ok { m.CreatedAt = time.Nano(v) }
+}
+
+type RecordLinkList []*RecordLink
+
+func (s *RecordLinkList) Len() int             { return len(*s) }
+func (s *RecordLinkList) At(i int) model.Fielder { return (*s)[i] }
+func (s *RecordLinkList) Append() model.Fielder  { v := &RecordLink{}; *s = append(*s, v); return v }
+func (s *RecordLinkList) IsNil() bool          { return s == nil }
+func (s *RecordLinkList) EncodeFields(_ model.FieldWriter) {}
+func (s *RecordLinkList) DecodeFields(_ model.FieldReader) {}
+
+func (m *RecordLink) Validate(action byte) error {
+	return model.ValidateFields(action, m)
+}
+
+func (*RecordLink) Allow() model.Action     { return RecordLinkModel.Allow }
+func (*RecordLinkList) Allow() model.Action { return RecordLinkModel.Allow }
+
+var RecordLink_ = struct {
+	Id string
+	UserId string
+	Module string
+	RecordId string
+	CreatedAt string
+}{
+	Id: "id",
+	UserId: "user_id",
+	Module: "module",
+	RecordId: "record_id",
+	CreatedAt: "created_at",
+}
+
+func ReadOneRecordLink(qb *orm.QB, model *RecordLink) (*RecordLink, error) {
+	err := qb.ReadOne()
+	if err != nil {
+		return nil, err
+	}
+	return model, nil
+}
+
+func ReadAllRecordLink(qb *orm.QB) (RecordLinkList, error) {
+	var results RecordLinkList
+	err := qb.ReadAll(
+		func() model.Model { return &RecordLink{} },
+		func(m model.Model) { results = append(results, m.(*RecordLink)) },
+	)
+	return results, err
+}
+
 // ModelName is the module identity: Definition.Name.
 const ModelName = "access"
 

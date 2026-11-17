@@ -77,4 +77,16 @@ var AssignmentModel = model.Definition{
 	Rules: model.Rules{Create: model.AddMyBusinessRule, Read: model.HaveNoBusinessRule, Delete: model.AddMyBusinessRule},
 }
 
-var Definition = model.ModuleDefinition{Name: "access", Entities: []model.Definition{RoleRecordModel, AssignmentModel, PersonModel, AuditEntryModel}}
+// RecordLinkModel maps a user account to one or more domain records in a module (D2).
+var RecordLinkModel = model.Definition{
+	Name: "access_record_link",
+	Fields: model.Fields{
+		{Name: "id", Type: model.Text(), ServerOnly: true, DB: &model.FieldDB{PK: true}},
+		{Name: "user_id", Type: model.Text(), NotNull: true},
+		{Name: "module", Type: model.Text(), NotNull: true},
+		{Name: "record_id", Type: model.Text(), NotNull: true},
+		{Name: "created_at", Type: model.NanoTime(), ServerOnly: true},
+	},
+}
+
+var Definition = model.ModuleDefinition{Name: "access", Entities: []model.Definition{RoleRecordModel, AssignmentModel, PersonModel, AuditEntryModel, RecordLinkModel}}

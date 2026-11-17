@@ -19,7 +19,7 @@ func Migrate(conn ddl.Execer, ddlCompiler ddl.Compiler) error {
 	if err := rbac.Migrate(conn, ddlCompiler); err != nil {
 		return err
 	}
-	sorted, err := ddl.TopologicalSort([]model.Model{&access.AuditEntry{}})
+	sorted, err := ddl.TopologicalSort([]model.Model{&access.AuditEntry{}, &access.RecordLink{}})
 	if err != nil {
 		return err
 	}
