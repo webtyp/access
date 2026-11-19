@@ -1,3 +1,5 @@
+//go:build !wasm || browser
+
 package access
 
 import (
