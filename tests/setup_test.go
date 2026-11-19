@@ -8,6 +8,7 @@ import (
 	"webtyp.com/auth"
 	"webtyp.com/auth/authority"
 	"webtyp.com/ddl"
+	"webtyp.com/events/inprocess"
 	"webtyp.com/model"
 	"webtyp.com/orm"
 	"webtyp.com/rbac"
@@ -34,7 +35,7 @@ func newEnvDetails(t *testing.T) (*orm.DB, model.IDGenerator, *access.Module, *a
 	}
 
 	ids := &seqIDs{}
-	authMod, err := authority.New(db, auth.Config{IDs: ids})
+	authMod, err := authority.New(db, auth.Config{IDs: ids, Events: &inprocess.Broker{}})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -77,7 +78,7 @@ func newEnv(t *testing.T, assurance model.Assurance) (*access.Module, *authority
 	}
 
 	ids := &seqIDs{}
-	authMod, err := authority.New(db, auth.Config{IDs: ids})
+	authMod, err := authority.New(db, auth.Config{IDs: ids, Events: &inprocess.Broker{}})
 	if err != nil {
 		t.Fatal(err)
 	}
