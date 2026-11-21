@@ -35,11 +35,11 @@ func TestScreens(t *testing.T) {
 		t.Errorf("expected empty permission for group, got %q", group.Permission)
 	}
 
-	if len(group.Children) != 4 {
-		t.Fatalf("expected 4 children screens, got %d", len(group.Children))
+	if len(group.Children) != 3 {
+		t.Fatalf("expected 3 children screens, got %d", len(group.Children))
 	}
 
-	expectedPerms := []model.Resource{"access_assignment", "access_role", "access_assignment", "access_audit"}
+	expectedPerms := []model.Resource{"access_role", "access_assignment", "access_audit"}
 	for i, s := range group.Children {
 		if err := s.Validate(); err != nil {
 			t.Errorf("screen %d validate: %v", i, err)

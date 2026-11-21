@@ -7,6 +7,10 @@ import (
 	"webtyp.com/rbac"
 )
 
+type roleToneSetter interface {
+	SetRoleTone(projectID, id, tone string) error
+}
+
 var ErrUnsupportedCondition = fmt.Err("access: this list filters only by search or equality")
 
 type roleStore struct {
@@ -31,6 +35,7 @@ func (s *roleStore) ReadOne(rec model.Model, id string) error {
 	target.Name = r.Name
 	target.Description = r.Description
 	target.SessionTtl = r.SessionTtl
+	target.Tone = r.Tone
 	target.UserCount = count
 	return nil
 }
@@ -65,13 +70,18 @@ func (s *roleStore) Create(rec model.Model) error {
 	if err := s.d.roles.SetRoleSessionTTL(s.d.project, id, r.SessionTtl); err != nil {
 		return err
 	}
+	if ts, ok := s.d.roles.(roleToneSetter); ok && r.Tone != "" {
+		if err := ts.SetRoleTone(s.d.project, id, r.Tone); err != nil {
+			return err
+		}
+	}
 	return s.d.Record(r.ActorId, AuditRoleSave, r.Code, r.Name)
 }
 
 func (s *roleStore) UpdateFields(rec model.Model, id string, fields []string) error {
 	r := rec.(*RoleRecord)
 	for _, f := range fields {
-		if f != "name" && f != "description" && f != "session_ttl" {
+		if f != "name" && f != "description" && f != "session_ttl" && f != "tone" {
 			return crud.ErrInvalidField
 		}
 	}
@@ -86,6 +96,11 @@ func (s *roleStore) UpdateFields(rec model.Model, id string, fields []string) er
 	}
 	if err := s.d.roles.SetRoleSessionTTL(s.d.project, existing.Id, r.SessionTtl); err != nil {
 		return err
+	}
+	if ts, ok := s.d.roles.(roleToneSetter); ok {
+		if err := ts.SetRoleTone(s.d.project, existing.Id, r.Tone); err != nil {
+			return err
+		}
 	}
 
 	return s.d.Record(r.ActorId, AuditRoleSave, id, r.Name)
@@ -109,11 +124,10 @@ type assignmentStore struct {
 }
 
 func (s *assignmentStore) ReadOne(rec model.Model, id string) error {
-	parts, ok := model.SplitKey(id, 2)
-	if !ok || len(parts) != 2 {
+	code, userID, ok := splitAssignmentID(id)
+	if !ok {
 		return fmt.Err("not found")
 	}
-	code, userID := parts[0], parts[1]
 	ids, err := s.d.roles.UsersInRole(s.d.project, model.RoleCode(code))
 	if err != nil {
 		return err

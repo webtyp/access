@@ -3,6 +3,7 @@ package access
 import (
 	"webtyp.com/input"
 	"webtyp.com/model"
+	"webtyp.com/palette"
 )
 
 
@@ -30,8 +31,9 @@ var RoleRecordModel = model.Definition{
 	Fields: model.Fields{
 		{Name: "id", Type: model.Text(), ServerOnly: true, DB: &model.FieldDB{PK: true}},
 		{Name: "code", Type: input.Text(), Label: "Code", Help: "Short identifier the permissions refer to, e.g. reception.", NotNull: true,
-			Permitted: model.Permitted{Letters: true, Numbers: true, Extra: []rune{'_'}, Minimum: 2, Maximum: 40}, Item: model.ItemDescription},
-		{Name: "name", Type: input.Text(), Label: "Name", NotNull: true, Permitted: model.Permitted{Minimum: 1, Maximum: 80}, Item: model.ItemLabel},
+			Permitted: model.Permitted{Letters: true, Numbers: true, Extra: []rune{'_'}, Minimum: 2, Maximum: 40}},
+		{Name: "name", Type: input.Text(), Label: "Name", NotNull: true, Permitted: model.Permitted{Minimum: 1, Maximum: 80}},
+		{Name: "tone", Type: input.Select(), Label: "Color", Help: "Color from the clinic palette.", OmitEmpty: true, Options: &palette.PaletteColorModel},
 		{Name: "description", Type: input.Textarea(), Label: "Description", OmitEmpty: true},
 		{Name: "session_ttl", Type: input.Number(), Label: "Session limit (seconds)", Help: "0 keeps the application default.", OmitEmpty: true},
 		{Name: "user_count", Type: model.Int(), OmitEmpty: true, ServerOnly: true},

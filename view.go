@@ -8,6 +8,11 @@ import (
 	"webtyp.com/view"
 )
 
+// Item formats a role row with its database palette colour.
+func (m *RoleRecord) Item() model.Item {
+	return model.Item{ID: m.Id, Label: m.Name, Description: m.Code, Tone: m.Tone}
+}
+
 const (
 	TitlePeople      = "People"
 	TitleRoles       = "Roles"

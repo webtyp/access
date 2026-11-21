@@ -429,6 +429,166 @@
       "identifiant utilisateur",
       "Benutzerkennung",
       "идентификатор пользователя"
+    ],
+    "Color": [
+      "Color",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "Visual tone harmonized with the app theme. Suggested automatically if left blank.": [
+      "Tono visual armonizado con el tema de la app. Se sugiere automáticamente si queda vacío.",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "Filter by person...": [
+      "Filtrar por persona...",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "Assign": [
+      "Asignar",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "No roles assigned": [
+      "Sin roles asignados",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "Select role": [
+      "Seleccionar rol",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "Cyan": [
+      "Celeste",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "Violet": [
+      "Violeta",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "Teal": [
+      "Turquesa",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "Blue": [
+      "Azul",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "Indigo": [
+      "Índigo",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "Emerald": [
+      "Esmeralda",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "Amber": [
+      "Ámbar",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "Coral": [
+      "Coral",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "Rose": [
+      "Rosa",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "Slate": [
+      "Pizarra",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
     ]
   }
 }

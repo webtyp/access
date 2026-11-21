@@ -101,6 +101,7 @@ type RoleRecord struct {
 	Id string
 	Code string
 	Name string
+	Tone string
 	Description string
 	SessionTtl int64
 	UserCount int64
@@ -111,7 +112,7 @@ func (m *RoleRecord) ModelName() string { return "access_role" }
 
 func (m *RoleRecord) Schema() []model.Field { return RoleRecordModel.Fields }
 
-func (m *RoleRecord) Pointers() []any { return []any{&m.Id, &m.Code, &m.Name, &m.Description, &m.SessionTtl, &m.UserCount, &m.ActorId} }
+func (m *RoleRecord) Pointers() []any { return []any{&m.Id, &m.Code, &m.Name, &m.Tone, &m.Description, &m.SessionTtl, &m.UserCount, &m.ActorId} }
 
 func (m *RoleRecord) IsNil() bool { return m == nil }
 
@@ -119,6 +120,7 @@ func (m *RoleRecord) EncodeFields(w model.FieldWriter) {
 	w.String("id", m.Id)
 	w.String("code", m.Code)
 	w.String("name", m.Name)
+	if m.Tone != "" { w.String("tone", m.Tone) }
 	if m.Description != "" { w.String("description", m.Description) }
 	if m.SessionTtl != 0 { w.Int("session_ttl", m.SessionTtl) }
 	if m.UserCount != 0 { w.Int("user_count", m.UserCount) }
@@ -129,6 +131,7 @@ func (m *RoleRecord) DecodeFields(r model.FieldReader) {
 	if v, ok := r.String("id"); ok { m.Id = v }
 	if v, ok := r.String("code"); ok { m.Code = v }
 	if v, ok := r.String("name"); ok { m.Name = v }
+	if v, ok := r.String("tone"); ok { m.Tone = v }
 	if v, ok := r.String("description"); ok { m.Description = v }
 	if v, ok := r.Int("session_ttl"); ok { m.SessionTtl = v }
 	if v, ok := r.Int("user_count"); ok { m.UserCount = v }
@@ -151,14 +154,11 @@ func (m *RoleRecord) Validate(action byte) error {
 func (*RoleRecord) Allow() model.Action     { return RoleRecordModel.Allow }
 func (*RoleRecordList) Allow() model.Action { return RoleRecordModel.Allow }
 
-func (m *RoleRecord) Item() model.Item {
-	return model.Item{ID: m.Id, Label: m.Name, Description: m.Code}
-}
-
 var RoleRecord_ = struct {
 	Id string
 	Code string
 	Name string
+	Tone string
 	Description string
 	SessionTtl string
 	UserCount string
@@ -167,6 +167,7 @@ var RoleRecord_ = struct {
 	Id: "id",
 	Code: "code",
 	Name: "name",
+	Tone: "tone",
 	Description: "description",
 	SessionTtl: "session_ttl",
 	UserCount: "user_count",

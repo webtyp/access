@@ -18,7 +18,7 @@ func TestAssign_CreatesUserAndLists(t *testing.T) {
 	}
 
 	u, _ := authMod.UserByEmail("luz@x.cl")
-	expectedId := model.JoinKey("recep", u.Id)
+	expectedId := "recep:" + u.Id
 	if a.Id != expectedId {
 		t.Errorf("expected id %s, got %s", expectedId, a.Id)
 	}

@@ -76,6 +76,20 @@ func (m *Module) AssignByEmail(actorUserID, email, roleCode string) (Assignment,
 	return m.assign(actorUserID, u, roleCode)
 }
 
+const assignmentSep = ":"
+
+func joinAssignmentID(roleCode, userID string) string {
+	return roleCode + assignmentSep + userID
+}
+
+func splitAssignmentID(id string) (roleCode, userID string, ok bool) {
+	parts := fmt.Split(id, assignmentSep)
+	if len(parts) != 2 || parts[0] == "" || parts[1] == "" {
+		return "", "", false
+	}
+	return parts[0], parts[1], true
+}
+
 func (m *Module) assign(actorUserID string, u auth.User, roleCode string) (Assignment, error) {
 	if err := m.roles.AssignRoleByCode(m.project, u.Id, model.RoleCode(roleCode)); err != nil {
 		return Assignment{}, err
@@ -83,7 +97,7 @@ func (m *Module) assign(actorUserID string, u auth.User, roleCode string) (Assig
 	if err := m.Record(actorUserID, AuditAssign, roleCode, auditTarget(u)); err != nil {
 		return Assignment{}, err
 	}
-	return Assignment{Id: model.JoinKey(roleCode, u.Id), Email: u.Email, RoleCode: roleCode, UserId: u.Id, Name: u.Name}, nil
+	return Assignment{Id: joinAssignmentID(roleCode, u.Id), Email: u.Email, RoleCode: roleCode, UserId: u.Id, Name: u.Name}, nil
 }
 
 // auditTarget names a person in the audit: the e-mail, or the name when there is none.
@@ -94,18 +108,18 @@ func auditTarget(u auth.User) string {
 	return u.Name
 }
 
-// Revoke removes an assignment by its id "<role_code>/<user_id>".
+// Revoke removes an assignment by its id "<role_code>:<user_id>".
 func (m *Module) Revoke(actorUserID, assignmentID string) error {
-	parts := fmt.Split(assignmentID, "")
-	if len(parts) != 2 || parts[0] == "" || parts[1] == "" {
+	roleCode, userID, ok := splitAssignmentID(assignmentID)
+	if !ok {
 		return ErrAssignmentID
 	}
-	u, err := m.users.UserByID(parts[1])
+	u, err := m.users.UserByID(userID)
 	if err != nil {
 		return ErrUserNotFound
 	}
-	if err := m.roles.RevokeRoleByCode(m.project, u.Id, model.RoleCode(parts[0])); err != nil {
+	if err := m.roles.RevokeRoleByCode(m.project, u.Id, model.RoleCode(roleCode)); err != nil {
 		return err
 	}
-	return m.Record(actorUserID, AuditRevoke, parts[0], auditTarget(u))
+	return m.Record(actorUserID, AuditRevoke, roleCode, auditTarget(u))
 }
