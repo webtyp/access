@@ -13,11 +13,11 @@ func Screens(caller router.Caller) []view.Screen {
 	return []view.Screen{{
 		ID: ID, Label: LabelGroup, Icon: string(IconPeople), Help: helpGroup,
 		Children: []view.Screen{
-			{ID: ID + ".roles", Label: LabelRoles, Icon: string(IconRoles), Permission: "access_role",
+			{ID: RolesID, Label: LabelRoles, Icon: string(IconRoles), Permission: "access_role",
 				Presenter: access.NewRolesView(caller, view.WithDescription(descRoles))},
-			{ID: ID + ".assignments", Label: LabelAssignments, Icon: string(IconAssignments), Permission: "access_assignment",
-				Component: NewAssignmentsView(caller), Help: descAssignments},
-			{ID: ID + ".audit", Label: LabelAudit, Icon: string(IconAudit), Permission: "access_audit",
+			{ID: AssignmentsID, Label: LabelAssignments, Icon: string(IconAssignments), Permission: "access_assignment",
+				Main: NewAssignmentsView(caller), Help: descAssignments},
+			{ID: AuditID, Label: LabelAudit, Icon: string(IconAudit), Permission: "access_audit",
 				Presenter: access.NewAuditView(caller, view.WithDescription(descAudit))},
 		},
 	}}

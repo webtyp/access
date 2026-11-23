@@ -8,6 +8,15 @@ import (
 // ID is this module's root identity on client nav rails.
 const ID = "access"
 
+// Screen identities, so the app can put each in its menu.
+//
+//	Screens: []string{ui.RolesID, ui.AssignmentsID, ui.AuditID}
+const (
+	RolesID       = ID + ".roles"
+	AssignmentsID = ID + ".assignments"
+	AuditID       = ID + ".audit"
+)
+
 // Labels for navigation rail and headers.
 const (
 	LabelGroup       = "Users and roles"
